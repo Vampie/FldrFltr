@@ -2,24 +2,26 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:FldrFltr"
+        xmlns:ui="http://schemas.modernwpf.com/2019"
+        ui:WindowHelper.UseModernWindowStyle="True"
         Title="{local:Loc MainWindow.Title}"
-        Height="620" Width="800" MinHeight="480" MinWidth="640">
+        Height="680" Width="800" MinHeight="540" MinWidth="640">
     <Grid Margin="16">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" /> <!-- taal/thema -->
             <RowDefinition Height="Auto" /> <!-- drie velden -->
             <RowDefinition Height="Auto" /> <!-- actieknoppen -->
-            <RowDefinition Height="*" />    <!-- presets -->
+            <RowDefinition Height="*" MinHeight="130" /> <!-- presets -->
             <RowDefinition Height="2*" />   <!-- resultaat -->
         </Grid.RowDefinitions>
 
         <!-- Taal + thema: vanaf dag 1 zichtbaar en werkend (§1 van de projectbrief). -->
         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,12">
             <TextBlock Text="{local:Loc Settings.Language}" VerticalAlignment="Center" Margin="0,0,6,0" />
-            <ComboBox x:Name="LanguageComboBox" Width="90" Margin="0,0,16,0"
+            <ComboBox x:Name="LanguageComboBox" Width="110" Margin="0,0,16,0"
                       SelectionChanged="LanguageComboBox_SelectionChanged" />
             <TextBlock Text="{local:Loc Settings.Theme}" VerticalAlignment="Center" Margin="0,0,6,0" />
-            <ComboBox x:Name="ThemeComboBox" Width="110" SelectionChanged="ThemeComboBox_SelectionChanged" />
+            <ComboBox x:Name="ThemeComboBox" Width="180" SelectionChanged="ThemeComboBox_SelectionChanged" />
         </StackPanel>
 
         <!-- De drie invoervelden (§1). -->
@@ -39,7 +41,7 @@
 
                 <TextBlock Grid.Row="0" Grid.Column="0" Text="{local:Loc Fields.Folder}" VerticalAlignment="Center" Margin="0,0,8,8" />
                 <TextBox x:Name="FolderTextBox" Grid.Row="0" Grid.Column="1" Margin="0,0,8,8" VerticalAlignment="Center" />
-                <Button Grid.Row="0" Grid.Column="2" Content="{local:Loc Fields.FolderBrowse}" Margin="0,0,0,8" Click="BrowseFolderButton_Click" />
+                <Button Grid.Row="0" Grid.Column="2" Content="{local:Loc Fields.FolderBrowse}" Tag="Icons/icon-browse.png" Style="{StaticResource IconButton}" Margin="0,0,0,8" Click="BrowseFolderButton_Click" />
 
                 <TextBlock Grid.Row="1" Grid.Column="0" Text="{local:Loc Fields.Extensions}" VerticalAlignment="Center" Margin="0,0,8,8" />
                 <TextBox x:Name="ExtensionsTextBox" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Margin="0,0,0,8" VerticalAlignment="Center" />
@@ -48,17 +50,18 @@
                 <TextBox x:Name="TemplateTextBox" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Margin="0,0,0,8" VerticalAlignment="Center" />
 
                 <Button Grid.Row="3" Grid.Column="1" Content="{local:Loc Fields.InsertVariable}"
+                        Tag="Icons/icon-insert-variable.png" Style="{StaticResource IconButton}"
                         HorizontalAlignment="Left" Click="InsertVariableButton_Click" />
             </Grid>
         </Border>
 
         <!-- Actieknoppen (§1: altijd eerst Testen (dry-run), nooit stilzwijgend overschrijven). -->
         <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,0,12">
-            <Button x:Name="TestDryRunButton" Content="{local:Loc Buttons.TestDryRun}" Margin="0,0,8,0" Padding="12,6" Click="TestDryRunButton_Click" />
-            <Button x:Name="RenameButton" Content="{local:Loc Buttons.Rename}" Margin="0,0,8,0" Padding="12,6" Click="RenameButton_Click" />
-            <Button x:Name="SaveAsPresetButton" Content="{local:Loc Buttons.SaveAsPreset}" Margin="0,0,16,0" Padding="12,6" Click="SaveAsPresetButton_Click" />
+            <Button x:Name="TestDryRunButton" Content="{local:Loc Buttons.TestDryRun}" Tag="Icons/icon-inspect.png" Style="{StaticResource IconButton}" Margin="0,0,8,0" Click="TestDryRunButton_Click" />
+            <Button x:Name="RenameButton" Content="{local:Loc Buttons.Rename}" Tag="Icons/icon-run.png" Style="{StaticResource IconButton}" Margin="0,0,8,0" Click="RenameButton_Click" />
+            <Button x:Name="SaveAsPresetButton" Content="{local:Loc Buttons.SaveAsPreset}" Tag="Icons/icon-save.png" Style="{StaticResource IconButton}" Margin="0,0,16,0" Click="SaveAsPresetButton_Click" />
             <TextBlock Text="{local:Loc Fields.ConflictPolicy}" VerticalAlignment="Center" Margin="0,0,6,0" />
-            <ComboBox x:Name="ConflictPolicyComboBox" Width="140" VerticalAlignment="Center" />
+            <ComboBox x:Name="ConflictPolicyComboBox" Width="220" VerticalAlignment="Center" />
         </StackPanel>
 
         <!-- Bewaarde presets (§1/§4). -->
@@ -76,8 +79,8 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Grid.Column="0" Text="{Binding DisplayText}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
-                                <Button Grid.Column="1" Content="{local:Loc Buttons.Load}" Tag="{Binding}" Margin="8,0,0,0" Click="PresetLoadButton_Click" />
-                                <Button Grid.Column="2" Content="{local:Loc Buttons.Delete}" Tag="{Binding}" Margin="8,0,0,0" Click="PresetDeleteButton_Click" />
+                                <Button Grid.Column="1" Content="{local:Loc Buttons.Load}" Tag="Icons/icon-import.png" Style="{StaticResource IconButton}" Padding="8,3" Margin="8,0,0,0" Click="PresetLoadButton_Click" />
+                                <Button Grid.Column="2" Content="{local:Loc Buttons.Delete}" Tag="Icons/icon-delete.png" Style="{StaticResource IconButton}" Padding="8,3" Margin="8,0,0,0" Click="PresetDeleteButton_Click" />
                             </Grid>
                         </DataTemplate>
                     </ListBox.ItemTemplate>

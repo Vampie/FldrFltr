@@ -12,18 +12,6 @@ namespace FldrFltr
 {
     public partial class MainWindow : Window
     {
-        /// <summary>Every {Variable} from §2 of the projectbrief, in the same order as its table —
-        /// used to build the "Variabele invoegen" dropdown.</summary>
-        private static readonly string[] VariableTokens =
-        {
-            "{FileName}", "{OriginalName}", "{Extension}", "{OriginalExtension}",
-            "{FullPath}", "{Directory}", "{FileSize}",
-            "{Year}", "{Month}", "{Day}", "{Hour}", "{Minute}", "{Second}", "{Date}", "{Time}",
-            "{CreatedYear}", "{CreatedMonth}", "{CreatedDay}", "{CreatedHour}", "{CreatedMinute}", "{CreatedSecond}",
-            "{ModifiedYear}", "{ModifiedMonth}", "{ModifiedDay}", "{ModifiedHour}", "{ModifiedMinute}", "{ModifiedSecond}",
-            "{Counter}", "{Guid}", "{Random}", "{RandomString}"
-        };
-
         private readonly SettingsService _settingsService = new SettingsService();
         private readonly PresetStore _presetStore = new PresetStore();
         private readonly AppSettings _settings;
@@ -72,36 +60,8 @@ namespace FldrFltr
             }
         }
 
-        private void InsertVariableButton_Click(object sender, RoutedEventArgs e)
-        {
-            var button = (Button)sender;
-            if (button.ContextMenu == null)
-            {
-                button.ContextMenu = BuildVariableMenu();
-            }
-            button.ContextMenu.PlacementTarget = button;
-            button.ContextMenu.IsOpen = true;
-        }
-
-        private ContextMenu BuildVariableMenu()
-        {
-            var menu = new ContextMenu();
-            foreach (string token in VariableTokens)
-            {
-                var item = new MenuItem { Header = token };
-                item.Click += (_, __) => InsertAtCaret(token);
-                menu.Items.Add(item);
-            }
-            return menu;
-        }
-
-        private void InsertAtCaret(string token)
-        {
-            int caret = TemplateTextBox.CaretIndex;
-            TemplateTextBox.Text = TemplateTextBox.Text.Insert(caret, token);
-            TemplateTextBox.CaretIndex = caret + token.Length;
-            TemplateTextBox.Focus();
-        }
+        private void InsertVariableButton_Click(object sender, RoutedEventArgs e) =>
+            VariableMenuHelper.ShowVariableMenu((Button)sender, TemplateTextBox);
 
         private void TestDryRunButton_Click(object sender, RoutedEventArgs e) => RunPlan(execute: false);
 
@@ -173,7 +133,7 @@ namespace FldrFltr
 
         private void PresetLoadButton_Click(object sender, RoutedEventArgs e)
         {
-            var preset = (Preset)((Button)sender).Tag;
+            var preset = (Preset)((Button)sender).DataContext;
 
             FolderTextBox.Text = preset.Folder;
             ExtensionsTextBox.Text = preset.ExtensionFilter;
@@ -185,7 +145,7 @@ namespace FldrFltr
 
         private void PresetDeleteButton_Click(object sender, RoutedEventArgs e)
         {
-            var preset = (Preset)((Button)sender).Tag;
+            var preset = (Preset)((Button)sender).DataContext;
 
             MessageBoxResult result = MessageBox.Show(this, Localization.Get("Presets.ConfirmDelete", preset.Name),
                 Localization.Get("Errors.Title"), MessageBoxButton.YesNo, MessageBoxImage.Question);

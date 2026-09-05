@@ -70,3 +70,20 @@ Bijgehouden per fase van [CLAUDE.md §5](../CLAUDE.md). Vink af zodra een fase w
       Languages. Standaard meegeleverd: Monokai, Solarized Dark, Solarized Light. Nieuwe
       paletten toevoegen = een JSON-bestand droppen, geen UI-editor nodig (dat blijft een
       latere uitbreiding, zie CLAUDE.md §1)
+
+### Nafwerking (na fase 4)
+- [x] **Thema-bug opgelost**: het venster miste `ui:WindowHelper.UseModernWindowStyle="True"` —
+      daardoor bleven titelbalk en vensterachtergrond altijd licht, ongeacht het gekozen thema.
+      Geverifieerd met een screenshot vóór/na: nu volledig donker bij "Donker".
+- [x] **"Variabele invoegen ▾" onderverdeeld** in submenu's (`VariableMenuHelper`, zelfde opzet
+      als FldrSrtr's `VariableMenuHelper`): Algemeen / Bestand / Datum (huidige datum/tijd), met
+      scheidingslijnen tussen Bestand's aanmaak-/wijzigingsdatum-groepen
+- [x] **Dropdowns breder gemaakt**: Bij naamconflict 140→220px, Thema 110→180px (past nu ook
+      "Solarized Light"/"Solarized Dark"), Taal 90→110px
+- [x] **Iconen toegevoegd** op de actieknoppen (Bladeren, Testen, Hernoemen, Opslaan als preset,
+      Variabele invoegen, Laden, Verwijderen) — hergebruikt uit FldrSrtr's al-verwerkte
+      `IconSets/Default` (bron-PNG's staan buiten de repo onder `C:\claude_code\Resources\icons`),
+      via een vereenvoudigde `IconPathConverter` (één vaste set, geen pack-switching zoals in
+      FldrSrtr — dat is hier niet gevraagd)
+- [x] Layout-nasleep van de iconen: presetsrij paste niet meer volledig in de kaart — venster
+      wat hoger gemaakt (620→680) en de presets-rij kreeg een `MinHeight`

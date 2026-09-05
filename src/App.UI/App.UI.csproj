@@ -38,6 +38,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- Button icons — plain files next to the exe (not embedded), same portable philosophy.
+         Source originals live in C:\claude_code\Resources\icons (outside the repo); these are
+         the already-processed PNGs, reused from FldrSrtr's own IconSets\Default. -->
+    <None Include="IconSets\**\*.png" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\App.Core\App.Core.csproj" />
     <ProjectReference Include="..\App.Infrastructure\App.Infrastructure.csproj" />
   </ItemGroup>

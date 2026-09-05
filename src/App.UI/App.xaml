@@ -20,6 +20,24 @@
                 <Setter Property="CornerRadius" Value="6" />
                 <Setter Property="Padding" Value="12" />
             </Style>
+
+            <!-- Icon buttons: set Tag to an icon's filename (e.g. "Icons/icon-save.png" — the
+                 folder prefix is cosmetic, IconPathConverter only looks at the filename) and
+                 Content to the label text. A button with no Tag renders as a plain Button.
+                 BasedOn the implicit Button style so icon buttons keep ModernWpf's chrome.
+                 (Copied from FldrSrtr's App.xaml.) -->
+            <DataTemplate x:Key="IconButtonContentTemplate">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="{Binding RelativeSource={RelativeSource AncestorType=ButtonBase}, Path=Tag, Converter={x:Static local:IconPathConverter.Instance}}"
+                           Width="16" Height="16" Margin="0,0,6,0"
+                           Visibility="{Binding RelativeSource={RelativeSource AncestorType=ButtonBase}, Path=Tag, Converter={x:Static local:NullToVisibilityConverter.Instance}}" />
+                    <TextBlock Text="{Binding}" VerticalAlignment="Center" />
+                </StackPanel>
+            </DataTemplate>
+            <Style x:Key="IconButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                <Setter Property="ContentTemplate" Value="{StaticResource IconButtonContentTemplate}" />
+                <Setter Property="Padding" Value="10,6" />
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>
