@@ -39,7 +39,7 @@ namespace FldrFltr
             LanguageComboBox.ItemsSource = Localization.GetAvailableLanguages();
             LanguageComboBox.SelectedItem = Localization.CurrentLanguage;
 
-            ThemeComboBox.ItemsSource = ThemeProvider.AvailableThemes;
+            ThemeComboBox.ItemsSource = ThemeProvider.GetAvailableThemes();
             ThemeComboBox.SelectedItem = _settings.Theme;
 
             ConflictPolicyComboBox.ItemsSource = new[]

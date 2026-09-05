@@ -65,5 +65,8 @@ Bijgehouden per fase van [CLAUDE.md §5](../CLAUDE.md). Vink af zodra een fase w
       maken), "Laden" vult de drie velden, "Verwijderen" vraagt eerst bevestiging
 
 ### Fase 4 — optioneel, later
-- [ ] Extra kleurthema's naast de vier basisthema's (Monokai/Solarized-achtige paletten,
-      zelfde idee als FldrSrtr's `ThemeEditorWindow`)
+- [x] Extra kleurthema's naast de drie basisthema's: `ThemeProvider` laadt elk bestand onder
+      `Themes\<Naam>.json` (Base + AccentColor) — zelfde portable, geen-rebuild-principe als
+      Languages. Standaard meegeleverd: Monokai, Solarized Dark, Solarized Light. Nieuwe
+      paletten toevoegen = een JSON-bestand droppen, geen UI-editor nodig (dat blijft een
+      latere uitbreiding, zie CLAUDE.md §1)
