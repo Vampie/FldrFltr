@@ -44,16 +44,25 @@ Bijgehouden per fase van [CLAUDE.md §5](../CLAUDE.md). Vink af zodra een fase w
 - [ ] Applicatie-icoon (`assets/icon.ico`) — nog niet toegevoegd
 
 ### Fase 2 — Kernfunctionaliteit
-- [ ] `FileMatcher`: Map + Extensielijst → bestanden opzoeken
-- [ ] `RenameTemplateEngine`: naamsjabloon + alle variabelen uit §2 → nieuwe bestandsnamen
-- [ ] Dry-run-weergave in de resultaat-tabel
-- [ ] Echt hernoemen, met `ConflictResolver` (skip/overwrite/auto-`(1)`-suffix, standaard
-      auto-hernoemen, nooit stilzwijgend overschrijven)
+- [x] `FileMatcher`: Map + Extensielijst → bestanden opzoeken (niet-recursief, `*`/leeg = alles)
+- [x] `VariableResolver`: naamsjabloon + alle variabelen uit §2 → nieuwe bestandsnamen
+      (`{FileName}`/`{OriginalName}`, `{Extension}`/`{OriginalExtension}`, `{FullPath}`,
+      `{Directory}`, `{FileSize}`, nu-tijdstip + `{Created*}`/`{Modified*}`, `{Counter}` met
+      optionele start/stap, `{Guid}`, `{Random}`, `{RandomString}`) — inclusief het
+      "Variabele invoegen ▾"-menu in de UI
+- [x] Dry-run-weergave in de resultaat-tabel ("Testen (dry-run)"-knop)
+- [x] Echt hernoemen ("Hernoemen"-knop), met `ConflictResolver` (Overslaan/Overschrijven/
+      Automatisch hernoemen via een keuzelijst in de UI, standaard Automatisch hernoemen,
+      nooit stilzwijgend overschrijven) en `RenameEngine`
+- [x] Getest: dry-run, echt hernoemen, `{Counter:100:5}`, botsing → automatisch `(1)`-suffix,
+      geen wijziging als het sjabloon op de huidige naam uitkomt, Overslaan-beleid
 
 ### Fase 3 — Presets-lijst
-- [ ] Preset-model (Naam, Map, Extensielijst, Naamsjabloon, LaatstGebruikt)
-- [ ] `PresetStore` (`presets.json` naast de exe, met backup)
-- [ ] Opslaan / laden / bewerken / verwijderen vanuit de UI
+- [x] Preset-model (Naam, Map, Extensielijst, Naamsjabloon, LaatstGebruikt)
+- [x] `PresetStore` (`presets.json` naast de exe, met timestamped backups, 10 bewaard)
+- [x] Opslaan / laden / bewerken / verwijderen vanuit de UI — "Opslaan als preset..." onder een
+      bestaande naam werkt als bewerken (overschrijft die preset in plaats van een duplicaat te
+      maken), "Laden" vult de drie velden, "Verwijderen" vraagt eerst bevestiging
 
 ### Fase 4 — optioneel, later
 - [ ] Extra kleurthema's naast de vier basisthema's (Monokai/Solarized-achtige paletten,

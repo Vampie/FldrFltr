@@ -30,6 +30,7 @@ release_*/
 
 # Portable-configuratie die tijdens het lokaal testen ontstaat
 presets.json
+presets.backup.*.json
 settings.json
 
 # OS-ruis

@@ -7,6 +7,7 @@
   "Fields.Extensions": "Extension list:",
   "Fields.Template": "Name template:",
   "Fields.InsertVariable": "Insert variable ▾",
+  "Fields.ConflictPolicy": "On name conflict:",
 
   "Buttons.TestDryRun": "Test (dry run)",
   "Buttons.Rename": "Rename",
@@ -14,17 +15,34 @@
   "Buttons.Load": "Load",
   "Buttons.Delete": "Delete",
 
+  "ConflictPolicy.Skip": "Skip",
+  "ConflictPolicy.Overwrite": "Overwrite",
+  "ConflictPolicy.AutoRename": "Auto-rename",
+
   "Presets.Title": "Saved presets:",
   "Presets.Empty": "No presets saved yet.",
+  "Presets.SaveNameTitle": "Save preset",
+  "Presets.SaveNamePrompt": "Name for this preset:",
+  "Presets.ConfirmDelete": "Delete preset '{0}'?",
+  "Presets.NoFieldsToSave": "Fill in Folder, Extension list and Name template first.",
 
   "Results.Title": "Result (after Test/Rename):",
   "Results.ColumnFrom": "From",
   "Results.ColumnTo": "To",
   "Results.ColumnStatus": "Status",
 
+  "Status.Ok": "OK",
+  "Status.NoChange": "No change",
+  "Status.AutoRenamed": "Auto-renamed ({0})",
+  "Status.SkippedConflict": "Skipped (name conflict)",
+  "Status.Error": "Error: {0}",
+
   "Settings.Language": "Language:",
   "Settings.Theme": "Theme:",
   "Settings.LanguageChangedRestartRequired": "Restart FldrFltr to apply the new language.",
+
+  "Errors.Title": "FldrFltr",
+  "Errors.FolderMissing": "The folder does not exist.",
 
   "NotImplementedYet": "This feature will be implemented in a later step."
 }

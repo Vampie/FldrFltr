@@ -1,0 +1,21 @@
+using System;
+
+namespace App.Core.Model
+{
+    /// <summary>Plain snapshot of a file's metadata, as found by FileMatcher. Core never touches
+    /// disk beyond the matcher/engine themselves — kept as a separate type (rather than passing
+    /// System.IO.FileInfo around) so evaluation stays easy to unit-test.</summary>
+    public class FileEntry
+    {
+        public string FullPath { get; set; }
+        public string Directory { get; set; }
+        public string Name { get; set; }
+
+        /// <summary>Without the leading dot, e.g. "pdf". Empty string for extensionless files.</summary>
+        public string Extension { get; set; }
+
+        public long SizeBytes { get; set; }
+        public DateTime CreatedUtc { get; set; }
+        public DateTime ModifiedUtc { get; set; }
+    }
+}

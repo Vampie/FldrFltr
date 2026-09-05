@@ -56,24 +56,36 @@
         <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,0,12">
             <Button x:Name="TestDryRunButton" Content="{local:Loc Buttons.TestDryRun}" Margin="0,0,8,0" Padding="12,6" Click="TestDryRunButton_Click" />
             <Button x:Name="RenameButton" Content="{local:Loc Buttons.Rename}" Margin="0,0,8,0" Padding="12,6" Click="RenameButton_Click" />
-            <Button x:Name="SaveAsPresetButton" Content="{local:Loc Buttons.SaveAsPreset}" Padding="12,6" Click="SaveAsPresetButton_Click" />
+            <Button x:Name="SaveAsPresetButton" Content="{local:Loc Buttons.SaveAsPreset}" Margin="0,0,16,0" Padding="12,6" Click="SaveAsPresetButton_Click" />
+            <TextBlock Text="{local:Loc Fields.ConflictPolicy}" VerticalAlignment="Center" Margin="0,0,6,0" />
+            <ComboBox x:Name="ConflictPolicyComboBox" Width="140" VerticalAlignment="Center" />
         </StackPanel>
 
-        <!-- Bewaarde presets (§1, opgebouwd in fase 3 — hier alvast het lege lijst-frame). -->
+        <!-- Bewaarde presets (§1/§4). -->
         <Border Grid.Row="3" Style="{StaticResource CardBorder}" Margin="0,0,0,12">
             <DockPanel>
                 <TextBlock DockPanel.Dock="Top" Text="{local:Loc Presets.Title}" FontWeight="SemiBold" Margin="0,0,0,8" />
-                <ListBox x:Name="PresetsListBox">
+                <TextBlock x:Name="PresetsEmptyTextBlock" DockPanel.Dock="Top" Text="{local:Loc Presets.Empty}" Opacity="0.7" />
+                <ListBox x:Name="PresetsListBox" BorderThickness="0" Background="Transparent">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding}" />
+                            <Grid Margin="0,2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="{Binding DisplayText}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                                <Button Grid.Column="1" Content="{local:Loc Buttons.Load}" Tag="{Binding}" Margin="8,0,0,0" Click="PresetLoadButton_Click" />
+                                <Button Grid.Column="2" Content="{local:Loc Buttons.Delete}" Tag="{Binding}" Margin="8,0,0,0" Click="PresetDeleteButton_Click" />
+                            </Grid>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
             </DockPanel>
         </Border>
 
-        <!-- Resultaat-tabel na Testen/Hernoemen (§1, gevuld in fase 2). -->
+        <!-- Resultaat-tabel na Testen/Hernoemen (§1). -->
         <Border Grid.Row="4" Style="{StaticResource CardBorder}">
             <DockPanel>
                 <TextBlock DockPanel.Dock="Top" Text="{local:Loc Results.Title}" FontWeight="SemiBold" Margin="0,0,0,8" />
@@ -81,7 +93,7 @@
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="{local:Loc Results.ColumnFrom}" Binding="{Binding From}" Width="*" />
                         <DataGridTextColumn Header="{local:Loc Results.ColumnTo}" Binding="{Binding To}" Width="*" />
-                        <DataGridTextColumn Header="{local:Loc Results.ColumnStatus}" Binding="{Binding Status}" Width="120" />
+                        <DataGridTextColumn Header="{local:Loc Results.ColumnStatus}" Binding="{Binding StatusText}" Width="160" />
                     </DataGrid.Columns>
                 </DataGrid>
             </DockPanel>

@@ -20,6 +20,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- Microsoft.VisualBasic.Interaction.InputBox — the simplest built-in "type a name" prompt,
+         used when saving a preset. No custom prompt window needed for one text field. -->
+    <Reference Include="Microsoft.VisualBasic" />
+  </ItemGroup>
+
+  <ItemGroup>
     <!-- UI text lives as plain files next to the exe, not embedded — adding a language is
          dropping in a new Languages\<code>.json, no rebuild needed. See Localization/LocExtension. -->
     <None Include="Languages\**\*.json" CopyToOutputDirectory="PreserveNewest" />

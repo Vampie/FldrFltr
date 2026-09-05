@@ -7,6 +7,7 @@
   "Fields.Extensions": "Extensielijst:",
   "Fields.Template": "Naamsjabloon:",
   "Fields.InsertVariable": "Variabele invoegen ▾",
+  "Fields.ConflictPolicy": "Bij naamconflict:",
 
   "Buttons.TestDryRun": "Testen (dry-run)",
   "Buttons.Rename": "Hernoemen",
@@ -14,17 +15,34 @@
   "Buttons.Load": "Laden",
   "Buttons.Delete": "Verwijderen",
 
+  "ConflictPolicy.Skip": "Overslaan",
+  "ConflictPolicy.Overwrite": "Overschrijven",
+  "ConflictPolicy.AutoRename": "Automatisch hernoemen",
+
   "Presets.Title": "Bewaarde presets:",
   "Presets.Empty": "Nog geen presets opgeslagen.",
+  "Presets.SaveNameTitle": "Preset opslaan",
+  "Presets.SaveNamePrompt": "Naam voor deze preset:",
+  "Presets.ConfirmDelete": "Preset '{0}' verwijderen?",
+  "Presets.NoFieldsToSave": "Vul eerst Map, Extensielijst en Naamsjabloon in.",
 
   "Results.Title": "Resultaat (na Testen/Hernoemen):",
   "Results.ColumnFrom": "Van",
   "Results.ColumnTo": "Naar",
   "Results.ColumnStatus": "Status",
 
+  "Status.Ok": "OK",
+  "Status.NoChange": "Geen wijziging",
+  "Status.AutoRenamed": "Automatisch hernoemd ({0})",
+  "Status.SkippedConflict": "Overgeslagen (naamconflict)",
+  "Status.Error": "Fout: {0}",
+
   "Settings.Language": "Taal:",
   "Settings.Theme": "Thema:",
   "Settings.LanguageChangedRestartRequired": "Herstart FldrFltr om de nieuwe taal toe te passen.",
+
+  "Errors.Title": "FldrFltr",
+  "Errors.FolderMissing": "De map bestaat niet.",
 
   "NotImplementedYet": "Deze functie wordt in een volgende stap geïmplementeerd."
 }
