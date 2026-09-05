@@ -1,0 +1,30 @@
+{
+  "MainWindow.Title": "FldrFltr",
+
+  "Fields.Folder": "Folder:",
+  "Fields.FolderBrowse": "Browse...",
+  "Fields.FolderBrowseDialogTitle": "Select the folder",
+  "Fields.Extensions": "Extension list:",
+  "Fields.Template": "Name template:",
+  "Fields.InsertVariable": "Insert variable ▾",
+
+  "Buttons.TestDryRun": "Test (dry run)",
+  "Buttons.Rename": "Rename",
+  "Buttons.SaveAsPreset": "Save as preset...",
+  "Buttons.Load": "Load",
+  "Buttons.Delete": "Delete",
+
+  "Presets.Title": "Saved presets:",
+  "Presets.Empty": "No presets saved yet.",
+
+  "Results.Title": "Result (after Test/Rename):",
+  "Results.ColumnFrom": "From",
+  "Results.ColumnTo": "To",
+  "Results.ColumnStatus": "Status",
+
+  "Settings.Language": "Language:",
+  "Settings.Theme": "Theme:",
+  "Settings.LanguageChangedRestartRequired": "Restart FldrFltr to apply the new language.",
+
+  "NotImplementedYet": "This feature will be implemented in a later step."
+}

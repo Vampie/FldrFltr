@@ -1,0 +1,43 @@
+using System;
+using System.IO;
+
+namespace App.Infrastructure.Configuration
+{
+    /// <summary>
+    /// Resolves every on-disk location relative to the application's own folder.
+    /// Never touch %AppData% or the registry here — the app must stay portable.
+    /// </summary>
+    public static class PortablePaths
+    {
+        public static string BaseDirectory => AppDomain.CurrentDomain.BaseDirectory;
+
+        /// <summary>Language + theme choice — the only two persisted app-wide settings.</summary>
+        public static string SettingsFilePath => Path.Combine(BaseDirectory, "settings.json");
+
+        /// <summary>Saved map + extensielijst + naamsjabloon combinations.</summary>
+        public static string PresetsFilePath => Path.Combine(BaseDirectory, "presets.json");
+
+        /// <summary>
+        /// Throws a clear, actionable exception instead of a bare UnauthorizedAccessException
+        /// when the app's own folder can't be written to (e.g. Program Files without elevation).
+        /// </summary>
+        public static void EnsureBaseDirectoryIsWritable()
+        {
+            string probePath = Path.Combine(BaseDirectory, $".write-check-{Guid.NewGuid():N}.tmp");
+            try
+            {
+                File.WriteAllText(probePath, string.Empty);
+                File.Delete(probePath);
+            }
+            catch (Exception ex) when (ex is UnauthorizedAccessException || ex is IOException)
+            {
+                throw new InvalidOperationException(
+                    $"FldrFltr kan niet schrijven naar zijn eigen map:\n{BaseDirectory}\n\n" +
+                    "FldrFltr is portable en heeft schrijfrechten nodig in de map waarin het staat " +
+                    "(voor settings.json en presets.json). Verplaats de map naar een locatie waar je " +
+                    "schrijfrechten hebt, bijvoorbeeld je Documenten-map, en start opnieuw.",
+                    ex);
+            }
+        }
+    }
+}

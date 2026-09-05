@@ -1,0 +1,30 @@
+{
+  "MainWindow.Title": "FldrFltr",
+
+  "Fields.Folder": "Map:",
+  "Fields.FolderBrowse": "Bladeren...",
+  "Fields.FolderBrowseDialogTitle": "Selecteer de map",
+  "Fields.Extensions": "Extensielijst:",
+  "Fields.Template": "Naamsjabloon:",
+  "Fields.InsertVariable": "Variabele invoegen ▾",
+
+  "Buttons.TestDryRun": "Testen (dry-run)",
+  "Buttons.Rename": "Hernoemen",
+  "Buttons.SaveAsPreset": "Opslaan als preset...",
+  "Buttons.Load": "Laden",
+  "Buttons.Delete": "Verwijderen",
+
+  "Presets.Title": "Bewaarde presets:",
+  "Presets.Empty": "Nog geen presets opgeslagen.",
+
+  "Results.Title": "Resultaat (na Testen/Hernoemen):",
+  "Results.ColumnFrom": "Van",
+  "Results.ColumnTo": "Naar",
+  "Results.ColumnStatus": "Status",
+
+  "Settings.Language": "Taal:",
+  "Settings.Theme": "Thema:",
+  "Settings.LanguageChangedRestartRequired": "Herstart FldrFltr om de nieuwe taal toe te passen.",
+
+  "NotImplementedYet": "Deze functie wordt in een volgende stap geïmplementeerd."
+}

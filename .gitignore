@@ -1,0 +1,37 @@
+# Build-output
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Release/publish-output van het portable releasescript, en handmatig uitgepakte
+# releases die de gebruiker zelf test — bevatten hun eigen runtime data
+# (presets.json, settings.json) en horen niet in git.
+/publish/
+/release/
+release_*/
+*.zip
+
+# Rider / VS Code
+.idea/
+.vscode/
+
+# NuGet
+*.nupkg
+**/packages/*
+!**/packages/build/
+
+# Portable-configuratie die tijdens het lokaal testen ontstaat
+presets.json
+settings.json
+
+# OS-ruis
+Thumbs.db
+desktop.ini
