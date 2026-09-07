@@ -14,6 +14,8 @@
   "Buttons.SaveAsPreset": "Save as preset...",
   "Buttons.Load": "Load",
   "Buttons.Delete": "Delete",
+  "Buttons.VariableHelp": "Help",
+  "Buttons.VariableHelpPanel": "Show/hide variable panel",
 
   "ConflictPolicy.Skip": "Skip",
   "ConflictPolicy.Overwrite": "Overwrite",
@@ -50,5 +52,28 @@
   "Errors.Title": "FldrFltr",
   "Errors.FolderMissing": "The folder does not exist.",
 
-  "NotImplementedYet": "This feature will be implemented in a later step."
+  "NotImplementedYet": "This feature will be implemented in a later step.",
+
+  "VarHelp.WindowTitle": "Variable overview",
+  "VarHelp.PanelTitle": "Variable overview",
+
+  "VarHelp.Group.General": "General",
+  "VarHelp.Group.File": "File",
+  "VarHelp.Group.Date": "Date/time (current moment)",
+
+  "VarHelp.FileName": "The original file name, without extension.",
+  "VarHelp.OriginalName": "Same as {FileName} — alias, for readability when the template also adds new name parts.",
+  "VarHelp.Extension": "The original extension, without the dot (e.g. xml).",
+  "VarHelp.OriginalExtension": "Same as {Extension} — alias, to keep a template readable when {Extension} is also used as a separate, new name part.",
+  "VarHelp.FullPath": "The full original path, including the file name.",
+  "VarHelp.Directory": "The folder the file is in (without the file name).",
+  "VarHelp.FileSize": "File size in bytes.",
+  "VarHelp.CreatedParts": "The file's creation date, split up. Note: Windows often resets this date when a file is copied, so files copied together may still end up in different {CreatedYear} groups.",
+  "VarHelp.ModifiedParts": "The file's last-modified date, split up — more reliable than Created for \"when does this file actually belong\".",
+  "VarHelp.Counter": "An increasing counter over the matched files. The first number sets the start value, the second the step size. Without options: starts at 1, step 1.",
+  "VarHelp.Guid": "A unique GUID — guarantees a unique name, at the cost of readability.",
+  "VarHelp.Random": "A random number, optionally padded with leading zeros to a given width.",
+  "VarHelp.RandomString": "A random alphanumeric string, optional length (default 8).",
+  "VarHelp.DateParts": "The moment the rename is executed (i.e. \"now\", not a file date).",
+  "VarHelp.DateTime": "The same \"now\" moment, combined into a date and a time."
 }

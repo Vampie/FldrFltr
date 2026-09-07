@@ -21,7 +21,7 @@ release_*/
 
 # Lokale scratch-map om de laatste build snel met de hand te draaien (zie release.ps1) — geen
 # release-artefact, hoort niet in git.
-/test_ACOT/
+/test_ACOT*/
 
 # Rider / VS Code
 .idea/

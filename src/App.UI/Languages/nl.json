@@ -14,6 +14,8 @@
   "Buttons.SaveAsPreset": "Opslaan als preset...",
   "Buttons.Load": "Laden",
   "Buttons.Delete": "Verwijderen",
+  "Buttons.VariableHelp": "Help",
+  "Buttons.VariableHelpPanel": "Variabelenpaneel tonen/verbergen",
 
   "ConflictPolicy.Skip": "Overslaan",
   "ConflictPolicy.Overwrite": "Overschrijven",
@@ -50,5 +52,28 @@
   "Errors.Title": "FldrFltr",
   "Errors.FolderMissing": "De map bestaat niet.",
 
-  "NotImplementedYet": "Deze functie wordt in een volgende stap geïmplementeerd."
+  "NotImplementedYet": "Deze functie wordt in een volgende stap geïmplementeerd.",
+
+  "VarHelp.WindowTitle": "Variabele-overzicht",
+  "VarHelp.PanelTitle": "Variabele-overzicht",
+
+  "VarHelp.Group.General": "Algemeen",
+  "VarHelp.Group.File": "Bestand",
+  "VarHelp.Group.Date": "Datum/tijd (huidig moment)",
+
+  "VarHelp.FileName": "Bestandsnaam van het origineel, zonder extensie.",
+  "VarHelp.OriginalName": "Zelfde als {FileName} — alias, puur voor leesbaarheid in een sjabloon dat ook nieuwe naamsdelen toevoegt.",
+  "VarHelp.Extension": "Extensie van het origineel, zonder punt (bv. xml).",
+  "VarHelp.OriginalExtension": "Zelfde als {Extension} — alias, om een sjabloon leesbaar te houden als {Extension} ook als los, nieuw naamsdeel gebruikt wordt.",
+  "VarHelp.FullPath": "Volledig origineel pad, inclusief bestandsnaam.",
+  "VarHelp.Directory": "Map waarin het bestand zich bevindt (zonder bestandsnaam).",
+  "VarHelp.FileSize": "Bestandsgrootte in bytes.",
+  "VarHelp.CreatedParts": "Aanmaakdatum van het bestand, opgesplitst. Let op: Windows zet deze datum vaak terug bij het kopiëren van een bestand — hierdoor komen bestanden die je samen kopieerde soms toch niet in dezelfde {CreatedYear}-groep terecht.",
+  "VarHelp.ModifiedParts": "Laatst-gewijzigd-datum van het bestand, opgesplitst — betrouwbaarder dan Created voor \"wanneer hoort dit bestand eigenlijk thuis\".",
+  "VarHelp.Counter": "Oplopende teller over de gematchte bestanden. Het eerste getal is de startwaarde, het tweede de stapgrootte. Zonder opties: start op 1, stap 1.",
+  "VarHelp.Guid": "Een unieke GUID — garandeert een unieke naam, ten koste van leesbaarheid.",
+  "VarHelp.Random": "Willekeurig getal, optioneel met voorloopnullen tot de opgegeven breedte.",
+  "VarHelp.RandomString": "Willekeurige alfanumerieke tekenreeks, optionele lengte (standaard 8).",
+  "VarHelp.DateParts": "Het moment waarop de hernoeming uitgevoerd wordt (dus \"nu\", niet een bestandsdatum).",
+  "VarHelp.DateTime": "Hetzelfde \"nu\"-moment, samengesteld tot een datum en een tijd."
 }

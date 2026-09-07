@@ -27,6 +27,10 @@ namespace FldrFltr
         /// this session.</summary>
         private string _lastLoadedPresetName;
 
+        /// <summary>The non-modal variable-help popup — at most one at a time; re-activated
+        /// instead of duplicated on a second click, and cleared when the user closes it.</summary>
+        private VariableHelpWindow _variableHelpWindow;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -192,6 +196,58 @@ namespace FldrFltr
 
         private void InsertVariableButton_Click(object sender, RoutedEventArgs e) =>
             VariableMenuHelper.ShowVariableMenu((Button)sender, TemplateTextBox);
+
+        /// <summary>Opens the always-on-top variable overview as a separate, non-modal window
+        /// (Show(), never ShowDialog()) — Topmost keeps it visible while the user keeps typing in
+        /// MainWindow. A second click activates the existing window instead of opening another.</summary>
+        private void VariableHelpButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_variableHelpWindow == null)
+            {
+                _variableHelpWindow = new VariableHelpWindow { Owner = this };
+                _variableHelpWindow.Closed += (_, __) => _variableHelpWindow = null;
+                _variableHelpWindow.Show();
+            }
+            else
+            {
+                _variableHelpWindow.Activate();
+            }
+        }
+
+        /// <summary>Toggles the collapsible side panel by resizing HelpPanelColumn — 0 (hidden,
+        /// default) vs a fixed panel width. Rebuilds the panel's content on each open so it always
+        /// reflects the current language.</summary>
+        private const double HelpPanelWidth = 300;
+        private const double HelpPanelGap = 12;
+
+        private void ToggleHelpPanelButton_Click(object sender, RoutedEventArgs e)
+        {
+            bool isHidden = HelpPanelColumn.Width.Value == 0;
+            double delta = HelpPanelWidth + HelpPanelGap;
+            if (isHidden)
+            {
+                HelpPanelItemsControl.ItemsSource = VariableHelpContent.BuildLocalized();
+                HelpPanelColumn.Width = new GridLength(HelpPanelWidth);
+                HelpPanelBorder.Visibility = Visibility.Visible;
+                ToggleHelpPanelButton.Content = "◂";
+
+                // Grow the window itself so the panel doesn't squeeze the existing fields/buttons
+                // — clamped to the current screen the same way ApplyWindowPlacement is, since a
+                // small/secondary monitor may not have room to grow at all.
+                Rect grown = ClampToBestScreen(new Rect(Left, Top, Width + delta, Height));
+                Left = grown.Left;
+                Top = grown.Top;
+                Width = grown.Width;
+                Height = grown.Height;
+            }
+            else
+            {
+                HelpPanelColumn.Width = new GridLength(0);
+                HelpPanelBorder.Visibility = Visibility.Collapsed;
+                ToggleHelpPanelButton.Content = "▸";
+                Width = Math.Max(Width - delta, MinWidth);
+            }
+        }
 
         private async void TestDryRunButton_Click(object sender, RoutedEventArgs e) => await RunPlanAsync(execute: false);
 
