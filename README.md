@@ -234,3 +234,14 @@ Bijgehouden per fase van [CLAUDE.md §5](../CLAUDE.md). Vink af zodra een fase w
       releasescript de gebouwde bestanden er ook naartoe, zonder bestaande `settings.json`/
       `presets.json` daar te overschrijven (die staan niet in de kopieerlijst). `test_ACOT/`
       toegevoegd aan `.gitignore`.
+- [x] **Naamsjabloon kan nu ook verplaatsen**: `\` (of `/`) in het sjabloon wordt niet langer
+      weggefilterd als een ongeldig bestandsnaam-teken, maar als een echte padstructuur behandeld —
+      inclusief `..\` om een niveau omhoog te gaan. Voorbeelden uit de vraag:
+      `{OriginalExtension}\{FileName}.{Counter:100}` verdeelt bestanden in submappen per extensie
+      binnen dezelfde map; `..\{OriginalExtension}\{FileName}.{Counter:100}` doet hetzelfde maar een
+      niveau hoger. `RenameEngine` saneert nu per pad-segment (elk deel tussen de `\`'s krijgt zijn
+      eigen ongeldige-tekens-opkuis, `..`/`.` blijven intact) i.p.v. het hele sjabloon als één
+      bestandsnaam te behandelen, en maakt ontbrekende (sub)mappen aan vóór de effectieve
+      hernoeming. Dit wijkt bewust af van CLAUDE.md §1's oorspronkelijke "Hernoemen ≠ verplaatsen" —
+      expliciet zo gevraagd. Geverifieerd via een consoletest tegen `App.Core` rechtstreeks: beide
+      voorbeelden uit de vraag verplaatsen en herschikken bestanden precies zoals bedoeld.
