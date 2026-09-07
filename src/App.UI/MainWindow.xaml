@@ -13,8 +13,9 @@
             <RowDefinition Height="Auto" /> <!-- taal/thema -->
             <RowDefinition Height="Auto" /> <!-- drie velden -->
             <RowDefinition Height="Auto" /> <!-- actieknoppen -->
-            <RowDefinition Height="*" MinHeight="130" /> <!-- presets -->
-            <RowDefinition Height="2*" />   <!-- resultaat -->
+            <RowDefinition Height="Auto" /> <!-- presets: sized to content, capped via the ListBox's MaxHeight -->
+            <RowDefinition Height="*" />    <!-- resultaat: takes all remaining space -->
+
         </Grid.RowDefinitions>
 
         <!-- Taal + thema: vanaf dag 1 zichtbaar en werkend (§1 van de projectbrief). -->
@@ -71,7 +72,7 @@
             <DockPanel>
                 <TextBlock DockPanel.Dock="Top" Text="{local:Loc Presets.Title}" FontWeight="SemiBold" Margin="0,0,0,8" />
                 <TextBlock x:Name="PresetsEmptyTextBlock" DockPanel.Dock="Top" Text="{local:Loc Presets.Empty}" Opacity="0.7" />
-                <ListBox x:Name="PresetsListBox" BorderThickness="0" Background="Transparent">
+                <ListBox x:Name="PresetsListBox" BorderThickness="0" Background="Transparent" MaxHeight="160">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <Grid Margin="0,2">

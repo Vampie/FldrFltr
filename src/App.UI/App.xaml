@@ -70,6 +70,11 @@
                 <Setter Property="BorderBrush" Value="{DynamicResource SystemControlForegroundAccentBrush}" />
                 <Setter Property="BorderThickness" Value="1" />
                 <Setter Property="Padding" Value="8,5" />
+                <!-- The ToggleButton that carries the visible chrome has no content of its own
+                     (just the small arrow glyph), so without an explicit MinHeight the whole
+                     ComboBox can shrink back down to that arrow's height instead of a normal
+                     input-sized box. -->
+                <Setter Property="MinHeight" Value="32" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="ComboBox">

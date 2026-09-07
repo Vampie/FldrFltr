@@ -180,3 +180,15 @@ Bijgehouden per fase van [CLAUDE.md §5](../CLAUDE.md). Vink af zodra een fase w
         aan het werk op de machine — vensterfocus overnemen voor screenshots was niet veilig/gepast
         op dat moment); de ComboBox-fix is wel een letterlijke terugkeer naar reeds bevestigde
         werkende code.
+- [x] **2 kleine layout-fixes op het vorige punt**:
+      - Dropdowns waren weer heel klein/dun: de `ToggleButton` die de zichtbare Border+pijltje
+        draagt heeft zelf geen echte content (enkel het pijltje), dus zonder een expliciete
+        `MinHeight` kon de hele ComboBox terugvallen naar de hoogte van dat pijltje. `MinHeight="32"`
+        toegevoegd aan de ComboBox-stijl.
+      - De "Bewaarde presets"-kaart nam een vaste `*`-verhouding van de resterende ruimte in
+        (voorheen `MinHeight="130"`), wat met weinig/geen presets veel witruimte gaf. Rij nu
+        `Height="Auto"` (schaalt met de inhoud) met `MaxHeight="160"` op de `ListBox` zelf om te
+        voorkomen dat de kaart bij veel presets ongelimiteerd groeit; de "Resultaat"-kaart eronder
+        (`Height="*"`) krijgt daardoor de vrijgekomen ruimte.
+      - Kon ook deze ronde niet met screenshots geverifieerd worden (gebruiker was actief in Visual
+        Studio aan een ander project) — graag zelf even bevestigen.
