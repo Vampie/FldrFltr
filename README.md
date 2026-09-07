@@ -1,86 +1,82 @@
 # FldrFltr
 
-Portable Windows-tool om bestanden in een map te selecteren op extensie en in bulk te hernoemen
-(of verplaatsen/herschikken) via een naamsjabloon met variabelen (`{FileName}`, `{Year}`,
-`{Counter}`, ...). Zie [`CLAUDE.md`](../CLAUDE.md) (in de bovenliggende map) voor de volledige
-projectbrief: functionele eisen, de volledige variabelenlijst, de technologie-afweging en het
-architectuurvoorstel.
+Portable Windows tool to select files in a folder by extension and bulk-rename (or
+move/reorganize) them via a name template with variables (`{FileName}`, `{Year}`, `{Counter}`,
+...). See [`CLAUDE.md`](../CLAUDE.md) (in the parent folder) for the full project brief:
+functional requirements, the complete variable list, the technology trade-off and the
+architecture proposal.
 
-Zusterproject van [FldrSrtr](https://github.com/) — zelfde stack, zelfde portable filosofie
-(geen installer, geen registry, alles naast de exe).
+Sister project of [FldrSrtr](https://github.com/) — same stack, same portable philosophy (no
+installer, no registry, everything next to the exe).
 
 ## Stack
 
-- WPF + [ModernWpfUI](https://github.com/Kinnara/ModernWpf) op .NET Framework 4.8.1
-- Portable: `settings.json` en `presets.json` naast de exe (met timestamped backups), geen
-  `%AppData%`, geen registry
-- Meertalig (`Languages/*.json`, nl/en), volledig aanpasbare thema's (`Themes/*.json`) vanaf dag 1
+- WPF + [ModernWpfUI](https://github.com/Kinnara/ModernWpf) on .NET Framework 4.8.1
+- Portable: `settings.json` and `presets.json` next to the exe (with timestamped backups), no
+  `%AppData%`, no registry
+- Multilingual (`Languages/*.json`, nl/en), fully customizable themes (`Themes/*.json`) from day one
 
-## Bouwen
+## Building
 
 ```powershell
 dotnet build FldrFltr.slnx -c Debug
 ```
 
-Portable release (bouwnummer telt automatisch op, zie `build/release.ps1`):
+Portable release (build number auto-increments, see `build/release.ps1`):
 
 ```powershell
 .\build\release.ps1 -Version 1.0
 ```
 
-Het versienummer verschijnt ook in de titelbalk. Als `test_ACOT/` bestaat (lokale, niet-ingecheckte
-scratch-map), kopieert het releasescript de gebouwde bestanden er ook automatisch naartoe.
+The version number also shows up in the title bar. If `test_ACOT/` exists (a local, uncommitted
+scratch folder), the release script also copies the built files there automatically.
 
-## Functionaliteiten
+## Features
 
-**De drie invoervelden**
-- **Map** — de map waarin gezocht wordt, met een "Bladeren..."-knop (Ookii `VistaFolderBrowserDialog`)
-- **Extensielijst** — `xml`, `xml;csv;txt`, of `*`/leeg voor alle bestanden
-- **Naamsjabloon** — bepaalt de nieuwe naam én locatie van elk bestand:
-  - Alle variabelen uit CLAUDE.md §2: `{FileName}`/`{OriginalName}`, `{Extension}`/
-    `{OriginalExtension}`, `{FullPath}`, `{Directory}`, `{FileSize}`, huidig moment
-    (`{Year}`...`{Time}`), aanmaak-/wijzigingsdatum (`{Created*}`/`{Modified*}`), `{Counter}`
-    (met optionele start/stap), `{Guid}`, `{Random}`, `{RandomString}`
-  - "Variabele invoegen ▾" opent een menu met deze variabelen, onderverdeeld in Algemeen/
-    Bestand/Datum
-  - `\` (of `/`) in het sjabloon verplaatst het bestand — incl. `..\` om een niveau omhoog te
-    gaan — zodat je bestanden ook kan herschikken in (sub)mappen,
-    bv. `{OriginalExtension}\{FileName}.{Counter:100}` sorteert per extensie in submappen
+**The three input fields**
+- **Folder** — the folder to search, with a "Browse..." button (Ookii `VistaFolderBrowserDialog`)
+- **Extension list** — `xml`, `xml;csv;txt`, or `*`/empty for all files
+- **Name template** — determines the new name *and* location of each file:
+  - Every variable from CLAUDE.md §2: `{FileName}`/`{OriginalName}`, `{Extension}`/
+    `{OriginalExtension}`, `{FullPath}`, `{Directory}`, `{FileSize}`, current moment
+    (`{Year}`...`{Time}`), created/modified date (`{Created*}`/`{Modified*}`), `{Counter}` (with
+    optional start/step), `{Guid}`, `{Random}`, `{RandomString}`
+  - "Insert variable ▾" opens a menu with these variables, grouped into General/File/Date
+  - `\` (or `/`) in the template moves the file — including `..\` to go up a level — so you can
+    also reorganize files into (sub)folders, e.g. `{OriginalExtension}\{FileName}.{Counter:100}`
+    sorts files into subfolders per extension
 
-**Testen / hernoemen**
-- **Testen (dry-run)** toont het resultaat (van/naar/status) zonder iets te wijzigen
-- **Hernoemen** voert de wijziging echt uit, met conflicthandling: Overslaan / Overschrijven /
-  Automatisch hernoemen (`(1)`-suffix) — standaard Automatisch hernoemen, nooit stilzwijgend
-  overschrijven
-- Een statustekst naast "Resultaat" toont "Bezig met testen/hernoemen..." terwijl het loopt (op
-  een achtergrondthread, blokkeert de UI niet) en "Klaar — N bestand(en) ..." erna — geen
-  volwaardige voortgangsbalk, enkel een eenvoudige indicatie
+**Testing / renaming**
+- **Test (dry run)** shows the result (from/to/status) without changing anything
+- **Rename** performs the actual change, with conflict handling: Skip / Overwrite / Auto-rename
+  (`(1)` suffix) — defaults to Auto-rename, never silently overwriting
+- A status text next to "Result" shows "Testing/renaming..." while it runs (on a background
+  thread, doesn't block the UI) and "Done — N file(s) ..." afterwards — no full progress bar,
+  just a simple indicator
 
-**Bewaarde presets**
-- Een preset bewaart Map + Extensielijst + Naamsjabloon onder een naam; de lijst toont
-  "Naam → Map → Extensielijst → Sjabloon"
-- Dubbelklikken op een preset laadt de 3 velden én start meteen een dry-run
-- "Opslaan als preset..." onthoudt de laatst gebruikte presetnaam als voorstel, en vraagt
-  bevestiging als je een bestaande naam overschrijft (bewerkt die preset dan in plaats van een
-  duplicaat te maken)
-- "Verwijderen" (icoon, rechts uitgelijnd) vraagt eerst bevestiging
+**Saved presets**
+- A preset saves Folder + Extension list + Name template under a name; the list shows
+  "Name → Folder → Extension list → Template"
+- Double-clicking a preset loads the 3 fields and immediately starts a dry run
+- "Save as preset..." suggests the last-used preset name, and asks for confirmation if you
+  overwrite an existing name (edits that preset instead of creating a duplicate)
+- "Delete" (icon, right-aligned) asks for confirmation first
 
-**Meertaligheid & thema's**
-- Taal (nl/en) en thema kiezen rechtsboven, meteen actief (thema live, taal na herstart)
-- Naast Systeem/Licht/Donker een reeks kant-en-klare kleurthema's (Monokai, Solarized,
-  overgenomen uit echte Notepad++-themabestanden, en enkele geïnspireerd op bekende
-  editor-thema's) — elk thema zet ook een eigen achtergrond-/tekstkleur en een accentkleur op
-  knoppen/dropdowns/kaders, niet enkel licht-of-donker
-- Nieuwe thema's/talen toevoegen = een JSON-bestand droppen in `Themes/`/`Languages/`, geen
-  rebuild nodig
-- Verwijst `settings.json` naar een taal/thema die niet meer bestaat (verwijderd bestand, oud
-  bestand van een vorige installatie, ...), dan valt de taal terug op Engels en het thema op
-  Systeem — nooit een lege dropdown, en `settings.json` herstelt zichzelf naar de geldige waarde
+**Localization & themes**
+- Choose language (nl/en) and theme top-right, applied immediately (theme live, language after
+  restart)
+- Alongside System/Light/Dark, a range of ready-made color themes (Monokai, Solarized, taken from
+  real Notepad++ theme files, and some inspired by well-known editor themes) — each theme also
+  sets its own background/text color and an accent color on buttons/dropdowns/panels, not just
+  light-or-dark
+- Adding new themes/languages = drop a JSON file into `Themes/`/`Languages/`, no rebuild needed
+- If `settings.json` points to a language/theme that no longer exists (deleted file, leftover from
+  a previous install, ...), the language falls back to English and the theme to System — never a
+  blank dropdown, and `settings.json` heals itself back to the valid value
 
-**Venstergrootte & -positie**
-- Onthoudt positie, grootte én welk scherm bij het sluiten; bij een volgende start staat het
-  venster weer exact daar
-- Staat dat scherm niet meer aangesloten (of is de opgeslagen positie ongeldig), dan valt het
-  terug op een standaardgrootte — 35% van de breedte, 80% van de hoogte van het beeldscherm,
-  gecentreerd — en wordt hoe dan ook geklemd binnen een aangesloten scherm, zodat de app nooit
-  goeddeels of volledig buiten beeld opent
+**Window size & position**
+- Remembers position, size and which screen at close; on the next start the window opens back in
+  exactly the same place
+- If that screen is no longer connected (or the saved position is invalid), it falls back to a
+  default size — 35% of the screen's width, 80% of its height, centered — and is always clamped
+  within a connected screen, so the app never opens mostly or fully off-screen
