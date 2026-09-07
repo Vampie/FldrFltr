@@ -1,5 +1,7 @@
 {
   "MainWindow.Title": "FldrFltr",
+  "MainWindow.HeaderTitle": "FldrFltr",
+  "MainWindow.HeaderSubtitle": "Filter je mappen",
 
   "Fields.Folder": "Map:",
   "Fields.FolderBrowse": "Bladeren...",
@@ -28,8 +30,10 @@
   "Presets.ConfirmDelete": "Preset '{0}' verwijderen?",
   "Presets.ConfirmOverwrite": "Er bestaat al een preset met de naam '{0}'. Vervangen?",
   "Presets.NoFieldsToSave": "Vul eerst Map, Extensielijst en Naamsjabloon in.",
+  "Presets.AutoExpandResults": "Toon resultaat bij laden",
 
   "Results.Title": "Resultaat (na Testen/Hernoemen):",
+  "Results.ToggleTooltip": "Resultaat tonen/verbergen",
   "Results.ColumnFrom": "Van",
   "Results.ColumnTo": "Naar",
   "Results.ColumnStatus": "Status",

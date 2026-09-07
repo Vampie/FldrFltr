@@ -255,8 +255,12 @@ namespace FldrFltr
 
         /// <summary>Runs FileMatcher/rename on a background thread so the UI stays responsive,
         /// with a simple status text (no real progress bar needed — see StatusTextBlock in
-        /// MainWindow.xaml) showing "busy" while it runs and a result summary once it's done.</summary>
-        private async Task RunPlanAsync(bool execute)
+        /// MainWindow.xaml) showing "busy" while it runs and a result summary once it's done.
+        /// StatusTextBlock always ends up with the outcome regardless of the results table's
+        /// collapsed state (e.g. Rename without a prior Test) — <paramref name="allowExpandResults"/>
+        /// only controls whether a *dry run*'s table auto-expands (a real Rename never expands it;
+        /// see also AutoExpandOnPresetLoadCheckBox, which is the caller for a preset's auto-dry-run).</summary>
+        private async Task RunPlanAsync(bool execute, bool allowExpandResults = true)
         {
             SetBusy(Localization.Get(execute ? "Status.Busy.Rename" : "Status.Busy.Test"));
             try
@@ -274,6 +278,10 @@ namespace FldrFltr
 
                 ResultsDataGrid.ItemsSource = plan.Select(p => new RenameResultRow(p)).ToList();
                 StatusTextBlock.Text = Localization.Get(execute ? "Status.Done.Rename" : "Status.Done.Test", plan.Count);
+                if (!execute && allowExpandResults)
+                {
+                    SetResultsExpanded(true);
+                }
             }
             catch (DirectoryNotFoundException)
             {
@@ -302,6 +310,18 @@ namespace FldrFltr
             TestDryRunButton.IsEnabled = !isBusy;
             RenameButton.IsEnabled = !isBusy;
             SaveAsPresetButton.IsEnabled = !isBusy;
+        }
+
+        /// <summary>Toggles the results table's visibility — starts collapsed (see
+        /// ResultsDataGrid.Visibility in XAML); StatusTextBlock lives outside this and is
+        /// unaffected either way.</summary>
+        private void ToggleResultsButton_Click(object sender, RoutedEventArgs e) =>
+            SetResultsExpanded(ResultsDataGrid.Visibility != Visibility.Visible);
+
+        private void SetResultsExpanded(bool expanded)
+        {
+            ResultsDataGrid.Visibility = expanded ? Visibility.Visible : Visibility.Collapsed;
+            ToggleResultsButton.Content = expanded ? "▾" : "▸";
         }
 
         private RenameOptions BuildOptionsFromFields() => new RenameOptions
@@ -369,7 +389,10 @@ namespace FldrFltr
             if (PresetsListBox.SelectedItem is Preset preset)
             {
                 LoadPreset(preset);
-                await RunPlanAsync(execute: false); // dry-run straight away so results show what the preset would do
+                // Dry-run always happens on load, regardless of the checkbox — it only controls
+                // whether the results table auto-expands to show it (leaves the panel's current
+                // open/closed state alone otherwise; StatusTextBlock always updates either way).
+                await RunPlanAsync(execute: false, allowExpandResults: AutoExpandOnPresetLoadCheckBox.IsChecked == true);
             }
         }
 

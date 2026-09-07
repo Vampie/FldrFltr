@@ -1,5 +1,7 @@
 {
   "MainWindow.Title": "FldrFltr",
+  "MainWindow.HeaderTitle": "FldrFltr",
+  "MainWindow.HeaderSubtitle": "Filter your folders",
 
   "Fields.Folder": "Folder:",
   "Fields.FolderBrowse": "Browse...",
@@ -28,8 +30,10 @@
   "Presets.ConfirmDelete": "Delete preset '{0}'?",
   "Presets.ConfirmOverwrite": "A preset named '{0}' already exists. Replace it?",
   "Presets.NoFieldsToSave": "Fill in Folder, Extension list and Name template first.",
+  "Presets.AutoExpandResults": "Show result when loading",
 
   "Results.Title": "Result (after Test/Rename):",
+  "Results.ToggleTooltip": "Show/hide result",
   "Results.ColumnFrom": "From",
   "Results.ColumnTo": "To",
   "Results.ColumnStatus": "Status",

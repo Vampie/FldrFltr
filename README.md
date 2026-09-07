@@ -30,6 +30,9 @@ scratch folder), the release script also copies the built files there automatica
 
 ## Features
 
+**Header** — "FldrFltr" in the current theme's accent color, with a "Filter your folders"
+tagline next to it in the normal text color
+
 **The three input fields**
 - **Folder** — the folder to search, with a "Browse..." button (Ookii `VistaFolderBrowserDialog`)
 - **Extension list** — `xml`, `xml;csv;txt`, or `*`/empty for all files
@@ -53,11 +56,16 @@ scratch folder), the release script also copies the built files there automatica
 - A status text next to "Result" shows "Testing/renaming..." while it runs (on a background
   thread, doesn't block the UI) and "Done — N file(s) ..." afterwards — no full progress bar,
   just a simple indicator
+- The result table itself starts collapsed (toggle with the "▸"/"▾" next to its title) — the
+  status text above stays visible either way, so a Rename without a prior Test still shows its
+  outcome; running a Test (dry run) auto-expands the table
 
 **Saved presets**
 - A preset saves Folder + Extension list + Name template under a name; the list shows
   "Name → Folder → Extension list → Template"
-- Double-clicking a preset loads the 3 fields and immediately starts a dry run
+- Double-clicking a preset loads the 3 fields and immediately starts a dry run — a "Show result
+  when loading" checkbox next to "Saved presets" controls only whether that auto-expands the
+  result table (the dry run itself always runs)
 - "Save as preset..." suggests the last-used preset name, and asks for confirmation if you
   overwrite an existing name (edits that preset instead of creating a duplicate)
 - "Delete" (icon, right-aligned) asks for confirmation first

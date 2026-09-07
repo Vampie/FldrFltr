@@ -26,14 +26,26 @@
             <RowDefinition Height="*" />    <!-- resultaat: takes all remaining space -->
         </Grid.RowDefinitions>
 
-        <!-- Taal + thema: vanaf dag 1 zichtbaar en werkend (§1 van de projectbrief). -->
-        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,12">
-            <TextBlock Text="{local:Loc Settings.Language}" VerticalAlignment="Center" Margin="0,0,6,0" />
-            <ComboBox x:Name="LanguageComboBox" Width="110" Margin="0,0,16,0"
-                      SelectionChanged="LanguageComboBox_SelectionChanged" />
-            <TextBlock Text="{local:Loc Settings.Theme}" VerticalAlignment="Center" Margin="0,0,6,0" />
-            <ComboBox x:Name="ThemeComboBox" Width="220" SelectionChanged="ThemeComboBox_SelectionChanged" />
-        </StackPanel>
+        <!-- Titel (v2) + taal/thema: vanaf dag 1 zichtbaar en werkend (§1 van de projectbrief). -->
+        <Grid Grid.Row="0" Margin="0,0,0,12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Bottom">
+                <TextBlock Text="{local:Loc MainWindow.HeaderTitle}" FontSize="32" FontWeight="Bold"
+                           Foreground="{DynamicResource SystemControlForegroundAccentBrush}" VerticalAlignment="Bottom" />
+                <!-- Erft de gewone theme-tekstkleur van het Window (geen eigen Foreground). -->
+                <TextBlock Text="{local:Loc MainWindow.HeaderSubtitle}" FontSize="16" Margin="10,0,0,4" VerticalAlignment="Bottom" />
+            </StackPanel>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Bottom">
+                <TextBlock Text="{local:Loc Settings.Language}" VerticalAlignment="Center" Margin="0,0,6,0" />
+                <ComboBox x:Name="LanguageComboBox" Width="110" Margin="0,0,16,0"
+                          SelectionChanged="LanguageComboBox_SelectionChanged" />
+                <TextBlock Text="{local:Loc Settings.Theme}" VerticalAlignment="Center" Margin="0,0,6,0" />
+                <ComboBox x:Name="ThemeComboBox" Width="220" SelectionChanged="ThemeComboBox_SelectionChanged" />
+            </StackPanel>
+        </Grid>
 
         <!-- De drie invoervelden (§1). -->
         <Border Grid.Row="1" Style="{StaticResource CardBorder}" Margin="0,0,0,12">
@@ -95,7 +107,11 @@
         <!-- Bewaarde presets (§1/§4). -->
         <Border Grid.Row="4" Style="{StaticResource CardBorder}" Margin="0,0,0,12">
             <DockPanel>
-                <TextBlock DockPanel.Dock="Top" Text="{local:Loc Presets.Title}" FontWeight="SemiBold" Margin="0,0,0,8" />
+                <DockPanel DockPanel.Dock="Top" Margin="0,0,0,8">
+                    <CheckBox x:Name="AutoExpandOnPresetLoadCheckBox" DockPanel.Dock="Right"
+                              Content="{local:Loc Presets.AutoExpandResults}" IsChecked="True" VerticalAlignment="Center" />
+                    <TextBlock Text="{local:Loc Presets.Title}" FontWeight="SemiBold" VerticalAlignment="Center" />
+                </DockPanel>
                 <TextBlock x:Name="PresetsEmptyTextBlock" DockPanel.Dock="Top" Text="{local:Loc Presets.Empty}" Opacity="0.7" />
                 <ListBox x:Name="PresetsListBox" BorderThickness="0" Background="Transparent" MaxHeight="96"
                          MouseDoubleClick="PresetsListBox_MouseDoubleClick">
@@ -132,13 +148,19 @@
         <Border Grid.Row="5" Style="{StaticResource CardBorder}">
             <DockPanel>
                 <DockPanel DockPanel.Dock="Top" Margin="0,0,0,8">
-                    <TextBlock Text="{local:Loc Results.Title}" FontWeight="SemiBold" />
                     <!-- Geen echte voortgangsbalk nodig — enkel een simpele statustekst zodat
                          zichtbaar is dat de app aan het testen/hernoemen is, en wanneer het klaar
-                         is. -->
+                         is. Blijft zichtbaar ongeacht of de tabel hieronder in-/opgeklapt is, zodat
+                         je ook na een Hernoemen zonder voorafgaande dry-run het resultaat ziet. -->
                     <TextBlock x:Name="StatusTextBlock" DockPanel.Dock="Right" HorizontalAlignment="Right" Opacity="0.8" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button x:Name="ToggleResultsButton" Content="▸" Style="{StaticResource IconButton}"
+                                Padding="4,2" Margin="0,0,6,0" Click="ToggleResultsButton_Click"
+                                ToolTip="{local:Loc Results.ToggleTooltip}" />
+                        <TextBlock Text="{local:Loc Results.Title}" FontWeight="SemiBold" VerticalAlignment="Center" />
+                    </StackPanel>
                 </DockPanel>
-                <DataGrid x:Name="ResultsDataGrid" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column">
+                <DataGrid x:Name="ResultsDataGrid" Visibility="Collapsed" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="{local:Loc Results.ColumnFrom}" Binding="{Binding From}" Width="*" />
                         <DataGridTextColumn Header="{local:Loc Results.ColumnTo}" Binding="{Binding To}" Width="*" />
