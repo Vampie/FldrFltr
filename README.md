@@ -148,3 +148,15 @@ Bijgehouden per fase van [CLAUDE.md §5](../CLAUDE.md). Vink af zodra een fase w
       screenshots onder het Nord-thema: gesloten dropdown, open dropdown-lijst, en het
       "Variabele invoegen"-menu (incl. submenu "Bestand") tonen nu allemaal Nord's blauwgrijze
       achtergrond met witte tekst; Systeem-thema (licht) vertoont geen regressie.
+- [x] **Twee opvolgpunten op de dropdown-fix hierboven**:
+      - De ComboBox-template had een gedupliceerde `ToggleButton`-substructuur (eigen
+        Border+pijltje bovenop de "echte" Border+pijltje) die het pijltje verkeerd positioneerde
+        ("de dropdown is wat om zeep"). Vereenvoudigd naar één zichtbare laag
+        (Border+tekst+pijltje in één Grid) met een volledig transparante `ToggleButton` erbovenop,
+        enkel voor de klik-afhandeling.
+      - De huidige/gehoverde regel in een dropdown-lijst (ComboBox én "Variabele invoegen")
+        gebruikte een volle accentkleur-blok als markering — vervangen door de paginakleur
+        (`PageBackgroundBrush`, een andere tint dan de kaderkleur van de lijst zelf), een subtielere
+        aanduiding zonder de accentkleur, zoals gevraagd.
+      - Geverifieerd met screenshots onder Nord: proper uitgelijnd pijltje, zachte
+        achtergrond-highlight op de huidige regel; Systeem-thema (licht) vertoont geen regressie.
