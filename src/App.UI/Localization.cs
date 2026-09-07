@@ -24,6 +24,13 @@ namespace FldrFltr
     {
         public const string DefaultLanguage = "nl";
 
+        /// <summary>Used when the requested/saved language code doesn't match any file under
+        /// Languages\ anymore (deleted, renamed, or a stale settings.json from an older install)
+        /// — falls back to English rather than silently keeping an invalid code, which used to
+        /// leave the language ComboBox showing blank (its SelectedItem didn't match anything in
+        /// GetAvailableLanguages()).</summary>
+        public const string FallbackLanguage = "en";
+
         private static Dictionary<string, string> _active = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         private static Dictionary<string, string> _default = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
@@ -33,12 +40,31 @@ namespace FldrFltr
 
         public static void ApplyLanguage(string languageCode)
         {
-            CurrentLanguage = string.IsNullOrWhiteSpace(languageCode) ? DefaultLanguage : languageCode;
+            string requested = string.IsNullOrWhiteSpace(languageCode) ? DefaultLanguage : languageCode;
+            CurrentLanguage = ResolveLanguage(requested);
 
             _default = LoadFile(DefaultLanguage) ?? new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             _active = string.Equals(CurrentLanguage, DefaultLanguage, StringComparison.OrdinalIgnoreCase)
                 ? _default
                 : LoadFile(CurrentLanguage) ?? _default;
+        }
+
+        /// <summary>Picks the requested language if its file actually exists, else English if
+        /// that exists, else whatever language file IS available, else the bare default code (at
+        /// which point every Get() call falls back to raw keys anyway — no file means no crash,
+        /// just visibly-untranslated text).</summary>
+        private static string ResolveLanguage(string requested)
+        {
+            string[] available = GetAvailableLanguages();
+            if (available.Contains(requested, StringComparer.OrdinalIgnoreCase))
+            {
+                return requested;
+            }
+            if (available.Contains(FallbackLanguage, StringComparer.OrdinalIgnoreCase))
+            {
+                return FallbackLanguage;
+            }
+            return available.Length > 0 ? available[0] : DefaultLanguage;
         }
 
         /// <summary>Every language file found under Languages\ — a plain directory listing, so a

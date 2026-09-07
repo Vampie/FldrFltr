@@ -34,12 +34,34 @@ namespace FldrFltr
             Title = $"{Title} v{GetAppVersion()}";
 
             _settings = _settingsService.LoadOrCreateDefault();
+            ApplyWindowPlacement();
+            Closing += MainWindow_Closing;
+
+            // Localization.ApplyLanguage/ThemeProvider.ApplySetting (App.xaml.cs, before this
+            // window is constructed) already fell back to a real language/theme if the saved one
+            // no longer exists — self-heal settings.json here so it doesn't keep pointing at a
+            // stale value forever.
+            bool settingsNeedResave = false;
+            if (!string.Equals(_settings.Language, Localization.CurrentLanguage, StringComparison.OrdinalIgnoreCase))
+            {
+                _settings.Language = Localization.CurrentLanguage;
+                settingsNeedResave = true;
+            }
+            if (!string.Equals(_settings.Theme, ThemeProvider.CurrentTheme, StringComparison.OrdinalIgnoreCase))
+            {
+                _settings.Theme = ThemeProvider.CurrentTheme;
+                settingsNeedResave = true;
+            }
+            if (settingsNeedResave)
+            {
+                _settingsService.Save(_settings);
+            }
 
             LanguageComboBox.ItemsSource = Localization.GetAvailableLanguages();
             LanguageComboBox.SelectedItem = Localization.CurrentLanguage;
 
             ThemeComboBox.ItemsSource = ThemeProvider.GetAvailableThemes();
-            ThemeComboBox.SelectedItem = _settings.Theme;
+            ThemeComboBox.SelectedItem = ThemeProvider.CurrentTheme;
 
             ConflictPolicyComboBox.ItemsSource = new[]
             {
@@ -56,6 +78,103 @@ namespace FldrFltr
 
             _isInitializing = false;
         }
+
+        /// <summary>Restores the window to wherever it was last closed (including which monitor),
+        /// falling back to a sensible default — 35% of the primary screen's width, 80% of its
+        /// height, centered — the first time, or if the saved position no longer lands on any
+        /// connected screen (that monitor got unplugged, resolution changed, ...). Either way the
+        /// final bounds are clamped to fit within a real screen, so the window can never open
+        /// mostly or fully off-screen.</summary>
+        private void ApplyWindowPlacement()
+        {
+            WindowStartupLocation = WindowStartupLocation.Manual;
+
+            Rect? saved = _settings.WindowWidth > 0 && _settings.WindowHeight > 0
+                ? new Rect(_settings.WindowLeft ?? 0, _settings.WindowTop ?? 0, _settings.WindowWidth.Value, _settings.WindowHeight.Value)
+                : (Rect?)null;
+
+            Rect target = saved.HasValue && FitsOnAnyScreen(saved.Value)
+                ? saved.Value
+                : DefaultPlacement();
+
+            target = ClampToBestScreen(target);
+
+            Left = target.Left;
+            Top = target.Top;
+            Width = target.Width;
+            Height = target.Height;
+        }
+
+        private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            // RestoreBounds (not Left/Top/Width/Height) holds the "normal" size while maximized —
+            // saving the maximized bounds instead would restore into a huge, possibly
+            // now-invalid, top-left-anchored rectangle next time.
+            Rect bounds = WindowState == WindowState.Normal ? new Rect(Left, Top, Width, Height) : RestoreBounds;
+
+            _settings.WindowLeft = bounds.Left;
+            _settings.WindowTop = bounds.Top;
+            _settings.WindowWidth = bounds.Width;
+            _settings.WindowHeight = bounds.Height;
+            _settingsService.Save(_settings);
+        }
+
+        private static Rect DefaultPlacement()
+        {
+            System.Drawing.Rectangle screen = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea;
+            double width = screen.Width * 0.35;
+            double height = screen.Height * 0.80;
+            double left = screen.Left + (screen.Width - width) / 2;
+            double top = screen.Top + (screen.Height - height) / 2;
+            return new Rect(left, top, width, height);
+        }
+
+        /// <summary>True if a meaningful portion of the window would land on some currently
+        /// connected screen — not just a stray pixel, enough that the title bar is actually
+        /// reachable to move/resize it further.</summary>
+        private static bool FitsOnAnyScreen(Rect windowBounds)
+        {
+            const double MinVisibleWidth = 160;
+            const double MinVisibleHeight = 40;
+
+            foreach (System.Windows.Forms.Screen screen in System.Windows.Forms.Screen.AllScreens)
+            {
+                Rect overlap = windowBounds;
+                overlap.Intersect(ToRect(screen.WorkingArea));
+                if (!overlap.IsEmpty && overlap.Width >= MinVisibleWidth && overlap.Height >= MinVisibleHeight)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>Clamps a target rectangle to fit entirely within whichever connected screen
+        /// overlaps it the most (or the first screen if it doesn't overlap any — e.g. a brand
+        /// new default placement is always checked against the primary screen already, so this
+        /// mainly matters for a restored position whose screen shrank).</summary>
+        private static Rect ClampToBestScreen(Rect target)
+        {
+            System.Windows.Forms.Screen best = System.Windows.Forms.Screen.AllScreens
+                .OrderByDescending(screen =>
+                {
+                    Rect overlap = target;
+                    overlap.Intersect(ToRect(screen.WorkingArea));
+                    return overlap.IsEmpty ? 0 : overlap.Width * overlap.Height;
+                })
+                .FirstOrDefault() ?? System.Windows.Forms.Screen.PrimaryScreen;
+
+            Rect workingArea = ToRect(best.WorkingArea);
+            double width = Math.Min(target.Width, workingArea.Width);
+            double height = Math.Min(target.Height, workingArea.Height);
+            double left = Math.Min(Math.Max(target.Left, workingArea.Left), workingArea.Right - width);
+            double top = Math.Min(Math.Max(target.Top, workingArea.Top), workingArea.Bottom - height);
+            return new Rect(left, top, width, height);
+        }
+
+        private static Rect ToRect(System.Drawing.Rectangle rectangle) =>
+            new Rect(rectangle.Left, rectangle.Top, rectangle.Width, rectangle.Height);
 
         private void UpdatePresetsEmptyState()
         {

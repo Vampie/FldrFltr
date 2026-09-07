@@ -56,9 +56,20 @@ namespace FldrFltr
 
         public static string ThemesRootFolder => Path.Combine(PortablePaths.BaseDirectory, "Themes");
 
+        /// <summary>The theme actually applied, after resolving a possibly-stale requested name —
+        /// use this (not the raw settings value) to select the ThemeComboBox's item, so it never
+        /// ends up pointing at a name that isn't in GetAvailableThemes() (which used to leave the
+        /// ComboBox showing blank).</summary>
+        public static string CurrentTheme { get; private set; } = SystemThemeName;
+
         public static void ApplySetting(string themeName)
         {
-            (ApplicationTheme? baseTheme, string accentHex, string backgroundHex, string foregroundHex) = Resolve(themeName);
+            string requested = string.IsNullOrWhiteSpace(themeName) ? SystemThemeName : themeName;
+            CurrentTheme = GetAvailableThemes().Contains(requested, StringComparer.OrdinalIgnoreCase)
+                ? requested
+                : SystemThemeName; // the palette no longer exists (deleted, stale settings.json, ...): fall back rather than apply nothing and show a blank ComboBox
+
+            (ApplicationTheme? baseTheme, string accentHex, string backgroundHex, string foregroundHex) = Resolve(CurrentTheme);
 
             ThemeManager.Current.ApplicationTheme = baseTheme;
             ThemeManager.Current.AccentColor = string.IsNullOrEmpty(accentHex)

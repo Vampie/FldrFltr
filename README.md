@@ -73,3 +73,14 @@ scratch-map), kopieert het releasescript de gebouwde bestanden er ook automatisc
   knoppen/dropdowns/kaders, niet enkel licht-of-donker
 - Nieuwe thema's/talen toevoegen = een JSON-bestand droppen in `Themes/`/`Languages/`, geen
   rebuild nodig
+- Verwijst `settings.json` naar een taal/thema die niet meer bestaat (verwijderd bestand, oud
+  bestand van een vorige installatie, ...), dan valt de taal terug op Engels en het thema op
+  Systeem — nooit een lege dropdown, en `settings.json` herstelt zichzelf naar de geldige waarde
+
+**Venstergrootte & -positie**
+- Onthoudt positie, grootte én welk scherm bij het sluiten; bij een volgende start staat het
+  venster weer exact daar
+- Staat dat scherm niet meer aangesloten (of is de opgeslagen positie ongeldig), dan valt het
+  terug op een standaardgrootte — 35% van de breedte, 80% van de hoogte van het beeldscherm,
+  gecentreerd — en wordt hoe dan ook geklemd binnen een aangesloten scherm, zodat de app nooit
+  goeddeels of volledig buiten beeld opent
