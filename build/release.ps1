@@ -73,6 +73,13 @@ Get-ChildItem -Path $PublishSrc -Directory |
 
 Copy-Item -Path $IconPng -Destination $StagingDir -Force
 
+$ZipPath = Join-Path $RepoRoot "release\FldrFltr-$FullVersion.zip"
+Write-Host "-- Zippen naar $ZipPath --"
+if (Test-Path $ZipPath) {
+    Remove-Item $ZipPath -Force
+}
+Compress-Archive -Path (Join-Path $StagingDir "*") -DestinationPath $ZipPath
+
 # Local scratch folder for quickly running the latest build by hand — not part of the release
 # artifact itself, so files land flat (not under release\FldrFltr-<version>\), and existing
 # settings.json/presets.json there (test data) are left alone since they aren't in the copy list.
