@@ -3,6 +3,8 @@
 .SYNOPSIS
     Bouwt FldrFltr in Release-configuratie en verpakt het resultaat als portable zip.
     Geen installer, geen snelkoppelingen, geen registry-writes — alles naast de exe.
+    Vult ook release\ToCopy met enkel de bestanden die gewijzigd zijn t.o.v. de vorige release
+    (gewiste eerst), zodat je bij het updaten van een klant-pc niet telkens alles moet overzetten.
 
 .PARAMETER Version
     Major.Minor voor de release (bv. "1.0" of "1.0.0" — het patch-cijfer dat je hier meegeeft
@@ -91,9 +93,47 @@ if (Test-Path $TestDir) {
         ForEach-Object { Copy-Item -Path $_.FullName -Destination $TestDir -Recurse -Force }
 }
 
+# ToCopy: enkel de bestanden die echt gewijzigd zijn t.o.v. de vorige release, zodat je bij het
+# updaten van een klant-pc niet telkens de hele map moet overzetten — gewiste en opnieuw gevuld op
+# elke build, dus er blijven nooit bestanden van een oudere release in staan.
+$ToCopyDir = Join-Path $RepoRoot "release\ToCopy"
+Write-Host "-- ToCopy vullen ($ToCopyDir) --"
+if (Test-Path $ToCopyDir) {
+    Remove-Item $ToCopyDir -Recurse -Force
+}
+New-Item -ItemType Directory -Path $ToCopyDir -Force | Out-Null
+
+$PreviousDir = Get-ChildItem -Path (Join-Path $RepoRoot "release") -Directory -Filter "FldrFltr-*" |
+    Where-Object { $_.Name -ne "FldrFltr-$FullVersion" } |
+    Sort-Object { [version]($_.Name -replace '^FldrFltr-', '') } -Descending |
+    Select-Object -First 1
+
+if ($PreviousDir) {
+    Write-Host "   Vergeleken met vorige release: $($PreviousDir.Name)"
+    Get-ChildItem -Path $StagingDir -Recurse -File | ForEach-Object {
+        $RelativePath = $_.FullName.Substring($StagingDir.Length).TrimStart('\')
+        $OldFile = Join-Path $PreviousDir.FullName $RelativePath
+        $Changed = -not (Test-Path $OldFile) -or
+            (Get-FileHash $_.FullName -Algorithm SHA256).Hash -ne (Get-FileHash $OldFile -Algorithm SHA256).Hash
+        if ($Changed) {
+            $DestPath = Join-Path $ToCopyDir $RelativePath
+            $DestDir = Split-Path $DestPath -Parent
+            if (-not (Test-Path $DestDir)) {
+                New-Item -ItemType Directory -Path $DestDir -Force | Out-Null
+            }
+            Copy-Item -Path $_.FullName -Destination $DestPath -Force
+        }
+    }
+}
+else {
+    Write-Host "   Geen vorige release gevonden - alles gaat naar ToCopy."
+    Copy-Item -Path (Join-Path $StagingDir "*") -Destination $ToCopyDir -Recurse -Force
+}
+
 Write-Host ""
 Write-Host "Klaar:" -ForegroundColor Green
 Write-Host "  Map: $StagingDir"
 if (Test-Path $TestDir) {
     Write-Host "  Test-map: $TestDir"
 }
+Write-Host "  ToCopy (enkel gewijzigde bestanden): $ToCopyDir"
