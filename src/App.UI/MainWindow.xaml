@@ -21,7 +21,7 @@
             <ComboBox x:Name="LanguageComboBox" Width="110" Margin="0,0,16,0"
                       SelectionChanged="LanguageComboBox_SelectionChanged" />
             <TextBlock Text="{local:Loc Settings.Theme}" VerticalAlignment="Center" Margin="0,0,6,0" />
-            <ComboBox x:Name="ThemeComboBox" Width="180" SelectionChanged="ThemeComboBox_SelectionChanged" />
+            <ComboBox x:Name="ThemeComboBox" Width="220" SelectionChanged="ThemeComboBox_SelectionChanged" />
         </StackPanel>
 
         <!-- De drie invoervelden (§1). -->

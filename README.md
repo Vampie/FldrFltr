@@ -87,3 +87,18 @@ Bijgehouden per fase van [CLAUDE.md §5](../CLAUDE.md). Vink af zodra een fase w
       FldrSrtr — dat is hier niet gevraagd)
 - [x] Layout-nasleep van de iconen: presetsrij paste niet meer volledig in de kaart — venster
       wat hoger gemaakt (620→680) en de presets-rij kreeg een `MinHeight`
+- [x] **20 extra thema's** toegevoegd bovenop Monokai/Solarized Dark/Solarized Light, in twee
+      groepen:
+      - Exact overgenomen (Base + accentkleur) uit de echte Notepad++ `.xml`-themabestanden onder
+        `C:\claude_code\Resources\themes`: Choco, DansLeRuSH-Dark, DarkModeDefault, Deep Black,
+        Hello Kitty, HotFudgeSundae, Mono Industrial, MossyLawn, Khaki
+      - Geïnspireerd op de thema's uit
+        [spec-india.com/blog/notepad-themes](https://www.spec-india.com/blog/notepad-themes)
+        (die pagina geeft geen exacte hexcodes, enkel kleurbeschrijvingen): Dracula, Material,
+        Lunar, Nord, Neon, ICLS, Bespin, Slush & Poppies, Obsidian, Nautical but Nice, Waher Style
+        — bij Dracula/Nord de daadwerkelijk gepubliceerde paletkleuren, de rest naar beste
+        inschatting op basis van de beschrijving ("dark blue pastel, blue/red/white", "brown
+        background", ...)
+      - Thema-combobox verbreed naar 220px voor de langste namen ("Nautical but Nice")
+      - Geverifieerd met screenshots: Dracula (donker), Khaki (licht) en Slush & Poppies (licht,
+        bestandsnaam met "&") renderen allemaal correct
