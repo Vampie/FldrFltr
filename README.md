@@ -216,3 +216,21 @@ Bijgehouden per fase van [CLAUDE.md §5](../CLAUDE.md). Vink af zodra een fase w
         van de cursor in deze RDP-sessie (van het automatiseren zelf), niet van de app. Kon niet
         verder herleid worden binnen een redelijke tijdsbesteding; als dit stipje ook op je eigen
         scherm zichtbaar is (dus geen sessie-artefact), laat het weten.
+- [x] **Bugfix: het "blauwe stipje" bleek het échte klikbare gebied van de dropdowns te zijn** — de
+      gebruiker meldde dat enkel klikken exact op dat stipje de dropdown opende, klikken ergens
+      anders in de zichtbaar volledige doos deed niets. Bevestigd met UI Automation (klikken op
+      10/50/90% van de breedte, `ExpandCollapseState` uitlezen): enkel de eerste ~4px vanaf de
+      linkerkant opende de dropdown. Oorzaak: de `ToggleButton` die de zichtbare doos tekent kreeg
+      geen expliciete `HorizontalAlignment`/`VerticalAlignment` — zonder die twee properties viel
+      hij (via een geërfde stijl) terug op zijn eigen, veel kleinere natuurlijke afmeting in de
+      linkerbovenhoek, ook al oogde de rest van de doos (getekend door dezelfde `Border`) visueel
+      correct. `HorizontalAlignment="Stretch" VerticalAlignment="Stretch"` toegevoegd aan de
+      `ToggleButton` lost zowel het klikgebied als het "stipje" zelf op (dat stipje was dus geen
+      cursor-artefact, maar precies deze te-kleine doos). Grondig geverifieerd met UI Automation op
+      alle 3 dropdowns (Taal/Thema/Bij naamconflict) op meerdere posities, en met screenshots — geen
+      stipje meer zichtbaar.
+- [x] **`build/release.ps1` kopieert nu ook naar `test_ACOT`**: als die map bestaat (lokale,
+      niet-ingecheckte scratch-map om de laatste build snel met de hand te draaien), kopieert het
+      releasescript de gebouwde bestanden er ook naartoe, zonder bestaande `settings.json`/
+      `presets.json` daar te overschrijven (die staan niet in de kopieerlijst). `test_ACOT/`
+      toegevoegd aan `.gitignore`.

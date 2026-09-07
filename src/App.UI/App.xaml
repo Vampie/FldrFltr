@@ -82,23 +82,35 @@
                     <Setter.Value>
                         <ControlTemplate TargetType="ComboBox">
                             <Grid>
+                                <!-- The ToggleButton owns the ENTIRE visible box (Border+arrow)
+                                     as one self-contained template — this is the structure
+                                     already proven, via UI Automation, to actually open the
+                                     dropdown reliably. A prior attempt moved the arrow out into a
+                                     sibling element "for simplicity", which visually still looked
+                                     like a full-size box but silently shrank the real clickable
+                                     area down to a few pixels (confirmed by the user: only
+                                     clicking that exact spot opened the dropdown) — so the arrow
+                                     stays inside the ToggleButton's own template, just anchored
+                                     with plain HorizontalAlignment="Right" (no column-grid
+                                     indirection) instead of the earlier 2-column Grid that had
+                                     positioned it wrong. -->
                                 <ToggleButton x:Name="ToggleButton" Focusable="False" ClickMode="Press"
+                                              HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                                               Background="{TemplateBinding Background}"
                                               BorderBrush="{TemplateBinding BorderBrush}"
                                               BorderThickness="{TemplateBinding BorderThickness}"
+                                              Foreground="{TemplateBinding Foreground}"
                                               IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
                                     <ToggleButton.Template>
-                                        <!-- Just the box — no arrow in here. Putting the arrow in
-                                             this nested template (previous version) anchored it
-                                             to THIS Border's own coordinate space via a 2-column
-                                             Grid, which visually landed wrong; anchoring it
-                                             directly in the outer Grid below (HorizontalAlignment
-                                             ="Right") removes that indirection entirely. -->
                                         <ControlTemplate TargetType="ToggleButton">
                                             <Border Background="{TemplateBinding Background}"
                                                     BorderBrush="{TemplateBinding BorderBrush}"
                                                     BorderThickness="{TemplateBinding BorderThickness}"
-                                                    CornerRadius="4" />
+                                                    CornerRadius="4">
+                                                <Path Data="M 0 0 L 4 4 L 8 0 Z"
+                                                      Fill="{TemplateBinding Foreground}"
+                                                      HorizontalAlignment="Right" Margin="0,0,10,0" VerticalAlignment="Center" />
+                                            </Border>
                                         </ControlTemplate>
                                     </ToggleButton.Template>
                                 </ToggleButton>
@@ -107,9 +119,6 @@
                                                   ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
                                                   Margin="{TemplateBinding Padding}"
                                                   HorizontalAlignment="Left" VerticalAlignment="Center" />
-                                <Path IsHitTestVisible="False" Data="M 0 0 L 4 4 L 8 0 Z"
-                                      Fill="{TemplateBinding Foreground}"
-                                      HorizontalAlignment="Right" Margin="0,0,10,0" VerticalAlignment="Center" />
                                 <Popup x:Name="Popup" IsOpen="{TemplateBinding IsDropDownOpen}"
                                        Placement="Bottom" AllowsTransparency="True" Focusable="False" PopupAnimation="Slide">
                                     <Border Background="{TemplateBinding Background}"

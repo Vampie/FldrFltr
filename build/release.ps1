@@ -73,6 +73,20 @@ Get-ChildItem -Path $PublishSrc -Directory |
 
 Copy-Item -Path $IconPng -Destination $StagingDir -Force
 
+# Local scratch folder for quickly running the latest build by hand — not part of the release
+# artifact itself, so files land flat (not under release\FldrFltr-<version>\), and existing
+# settings.json/presets.json there (test data) are left alone since they aren't in the copy list.
+$TestDir = Join-Path $RepoRoot "test_ACOT"
+if (Test-Path $TestDir) {
+    Write-Host "-- Kopieren naar $TestDir --"
+    Get-ChildItem -Path $StagingDir -File | Copy-Item -Destination $TestDir -Force
+    Get-ChildItem -Path $StagingDir -Directory |
+        ForEach-Object { Copy-Item -Path $_.FullName -Destination $TestDir -Recurse -Force }
+}
+
 Write-Host ""
 Write-Host "Klaar:" -ForegroundColor Green
 Write-Host "  Map: $StagingDir"
+if (Test-Path $TestDir) {
+    Write-Host "  Test-map: $TestDir"
+}
