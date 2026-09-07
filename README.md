@@ -20,7 +20,7 @@ dotnet build FldrFltr.slnx -c Debug
 Portable release (build number auto-increments, see `build/release.ps1`):
 
 ```powershell
-.\build\release.ps1 -Version 1.0
+.\build\release.ps1 -Version 2.0
 ```
 
 The version number also shows up in the title bar. If `test_ACOT/` exists (a local, uncommitted
@@ -37,6 +37,9 @@ scratch folder), the release script also copies the built files there automatica
     (`{Year}`...`{Time}`), created/modified date (`{Created*}`/`{Modified*}`), `{Counter}` (with
     optional start/step), `{Guid}`, `{Random}`, `{RandomString}`
   - "Insert variable ▾" opens a menu with these variables, grouped into General/File/Date
+  - "Help" opens an always-on-top popup with what each variable means — non-modal, so you can
+    keep it open while typing; "▸"/"◂" toggles the same overview as a collapsible side panel
+    instead (the window widens to make room, so existing fields never get squeezed)
   - `\` (or `/`) in the template moves the file — including `..\` to go up a level — so you can
     also reorganize files into (sub)folders, e.g. `{OriginalExtension}\{FileName}.{Counter:100}`
     sorts files into subfolders per extension
