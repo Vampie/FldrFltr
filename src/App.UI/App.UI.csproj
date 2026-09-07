@@ -9,6 +9,7 @@
     <Nullable>disable</Nullable>
     <RootNamespace>FldrFltr</RootNamespace>
     <AssemblyName>FldrFltr</AssemblyName>
+    <ApplicationIcon>..\..\assets\icon.ico</ApplicationIcon>
     <!-- Keep InformationalVersion exactly what release.ps1 passes via -p:Version (e.g. "1.2.11") —
          the SDK otherwise appends "+<git-commit-hash>", which is noise in the titlebar. -->
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>

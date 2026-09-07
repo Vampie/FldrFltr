@@ -22,6 +22,7 @@ $ErrorActionPreference = "Stop"
 
 $RepoRoot     = Split-Path -Parent $PSScriptRoot
 $SlnPath      = Join-Path $RepoRoot "FldrFltr.slnx"
+$IconPng      = Join-Path $RepoRoot "fldrfltr.png"
 $PublishSrc   = Join-Path $RepoRoot "src\App.UI\bin\Release\net481"
 $CounterPath  = Join-Path $PSScriptRoot ".build-counter"
 
@@ -69,6 +70,8 @@ Get-ChildItem -Path $PublishSrc -File |
 # (zie Localization) — -File hierboven slaat ze over, dus kopieer elke submap generiek.
 Get-ChildItem -Path $PublishSrc -Directory |
     ForEach-Object { Copy-Item -Path $_.FullName -Destination $StagingDir -Recurse -Force }
+
+Copy-Item -Path $IconPng -Destination $StagingDir -Force
 
 Write-Host ""
 Write-Host "Klaar:" -ForegroundColor Green

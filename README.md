@@ -41,7 +41,12 @@ Bijgehouden per fase van [CLAUDE.md §5](../CLAUDE.md). Vink af zodra een fase w
       (`ThemeProvider`: Licht/Donker/Systeem via ModernWpf) overgenomen uit FldrSrtr en werkend
       vanaf de allereerste opstart, met een taal-/thema-kiezer rechtsboven in het venster
 - [x] `build/release.ps1` (portable build, geen installer)
-- [ ] Applicatie-icoon (`assets/icon.ico`) — nog niet toegevoegd
+- [x] Applicatie-icoon: `assets/icon.ico` (gegenereerd uit
+      `C:\claude_code\Resources\icons\fldrfltr.png`, geschaald naar 256×256 en als PNG-gecomprimeerd
+      ICO opgeslagen — Windows Vista+ ondersteunt dat rechtstreeks), ingesteld via
+      `App.UI.csproj`'s `ApplicationIcon`. `fldrfltr.png` zelf staat in de repo-root (zelfde
+      patroon als FldrSrtr's `fldrsrtr.png`) en wordt door `release.ps1` mee in de release-map
+      gekopieerd. Geverifieerd door het icoon terug uit de gebouwde exe te extraheren.
 
 ### Fase 2 — Kernfunctionaliteit
 - [x] `FileMatcher`: Map + Extensielijst → bestanden opzoeken (niet-recursief, `*`/leeg = alles)
