@@ -44,7 +44,7 @@
 
                 <TextBlock Grid.Row="0" Grid.Column="0" Text="{local:Loc Fields.Folder}" VerticalAlignment="Center" Margin="0,0,8,8" />
                 <TextBox x:Name="FolderTextBox" Grid.Row="0" Grid.Column="1" Margin="0,0,8,8" VerticalAlignment="Center" />
-                <Button Grid.Row="0" Grid.Column="2" Content="{local:Loc Fields.FolderBrowse}" Tag="Icons/icon-browse.png" Style="{StaticResource IconButton}" Margin="0,0,0,8" Click="BrowseFolderButton_Click" />
+                <Button Grid.Row="0" Grid.Column="2" Tag="Icons/icon-browse.png" Style="{StaticResource IconOnlyButton}" ToolTip="{local:Loc Fields.FolderBrowse}" Margin="0,0,0,8" Click="BrowseFolderButton_Click" />
 
                 <TextBlock Grid.Row="1" Grid.Column="0" Text="{local:Loc Fields.Extensions}" VerticalAlignment="Center" Margin="0,0,8,8" />
                 <TextBox x:Name="ExtensionsTextBox" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Margin="0,0,0,8" VerticalAlignment="Center" />
@@ -58,21 +58,24 @@
             </Grid>
         </Border>
 
-        <!-- Hernoemen: eigen kaart, boven de testen/opslaan-kaart. -->
-        <Border Grid.Row="2" Style="{StaticResource CardBorder}" Margin="0,0,0,12">
-            <Button x:Name="RenameButton" Content="{local:Loc Buttons.Rename}" Tag="Icons/icon-run.png" Style="{StaticResource IconButton}"
-                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Padding="12,10" Click="RenameButton_Click" />
-        </Border>
+        <!-- Hernoemen: eigen rij, geen kaart, volle canvasbreedte. -->
+        <Button x:Name="RenameButton" Grid.Row="2" Content="{local:Loc Buttons.Rename}" Tag="Icons/icon-run.png" Style="{StaticResource IconButton}"
+                HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Padding="12,10" Margin="0,0,0,12" Click="RenameButton_Click" />
 
         <!-- Actieknoppen (§1: altijd eerst Testen (dry-run), nooit stilzwijgend overschrijven) — in
-             hun eigen kaart, zelfde stijl als de andere blokken. -->
+             hun eigen kaart, zelfde stijl als de andere blokken. "Bij naamconflict" rechts
+             uitgelijnd, los van Testen/Opslaan links. -->
         <Border Grid.Row="3" Style="{StaticResource CardBorder}" Margin="0,0,0,12">
-            <StackPanel Orientation="Horizontal">
-                <Button x:Name="TestDryRunButton" Content="{local:Loc Buttons.TestDryRun}" Tag="Icons/icon-inspect.png" Style="{StaticResource IconButton}" Margin="0,0,8,0" Click="TestDryRunButton_Click" />
-                <Button x:Name="SaveAsPresetButton" Content="{local:Loc Buttons.SaveAsPreset}" Tag="Icons/icon-save.png" Style="{StaticResource IconButton}" Margin="0,0,16,0" Click="SaveAsPresetButton_Click" />
-                <TextBlock Text="{local:Loc Fields.ConflictPolicy}" VerticalAlignment="Center" Margin="0,0,6,0" />
-                <ComboBox x:Name="ConflictPolicyComboBox" Width="220" VerticalAlignment="Center" />
-            </StackPanel>
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                    <TextBlock Text="{local:Loc Fields.ConflictPolicy}" VerticalAlignment="Center" Margin="0,0,6,0" />
+                    <ComboBox x:Name="ConflictPolicyComboBox" Width="220" VerticalAlignment="Center" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="TestDryRunButton" Content="{local:Loc Buttons.TestDryRun}" Tag="Icons/icon-inspect.png" Style="{StaticResource IconButton}" Margin="0,0,8,0" Click="TestDryRunButton_Click" />
+                    <Button x:Name="SaveAsPresetButton" Content="{local:Loc Buttons.SaveAsPreset}" Tag="Icons/icon-save.png" Style="{StaticResource IconButton}" Click="SaveAsPresetButton_Click" />
+                </StackPanel>
+            </DockPanel>
         </Border>
 
         <!-- Bewaarde presets (§1/§4). -->
@@ -103,7 +106,7 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Grid.Column="0" Text="{Binding DisplayText}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
-                                <Button Grid.Column="1" Content="{local:Loc Buttons.Delete}" Tag="Icons/icon-delete.png" Style="{StaticResource IconButton}" Padding="6,2" Margin="8,0,0,0" Click="PresetDeleteButton_Click" />
+                                <Button Grid.Column="1" Tag="Icons/icon-delete.png" Style="{StaticResource IconOnlyButton}" ToolTip="{local:Loc Buttons.Delete}" Padding="6,4" Margin="8,0,0,0" Click="PresetDeleteButton_Click" />
                             </Grid>
                         </DataTemplate>
                     </ListBox.ItemTemplate>

@@ -268,3 +268,15 @@ Bijgehouden per fase van [CLAUDE.md §5](../CLAUDE.md). Vink af zodra een fase w
       testen/opslaan-kaart in.
       Kon deze keer niet met een screenshot geverifieerd worden (gebruiker was actief in een
       andere applicatie); graag zelf even bevestigen (vooral het dubbelklik-gedrag).
+- [x] **Kleine opvolg-fixes op de layout**:
+      - "Bladeren..." (Map) en "Verwijderen" (presets) tonen nu enkel het icoon, geen labeltekst
+        meer — nieuwe `IconOnlyButton`-stijl in `App.xaml` (zelfde `Tag`-conventie als
+        `IconButton`, maar zonder tekst); de weggevallen tekst zit nu als `ToolTip` op de knop.
+      - "Bij naamconflict" staat nu rechts uitgelijnd in de testen/opslaan-kaart (een `DockPanel`
+        i.p.v. een enkele `StackPanel`, met de naamconflict-groep `DockPanel.Dock="Right"`), los
+        van Testen/Opslaan die links blijven staan.
+      - De kaart rond de "Hernoemen"-knop (vorige stap) is weer weg — gewoon een knop op zijn
+        eigen rij, volle breedte, zonder `CardBorder` eromheen.
+      - Kon ook deze ronde niet met een screenshot geverifieerd worden (gebruiker nog steeds actief
+        in een andere applicatie); wel gecontroleerd dat de app zonder fouten opstart. Graag zelf
+        even bevestigen.

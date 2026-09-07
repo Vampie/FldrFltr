@@ -225,6 +225,17 @@
                 <Setter Property="ContentTemplate" Value="{StaticResource IconButtonContentTemplate}" />
                 <Setter Property="Padding" Value="10,6" />
             </Style>
+
+            <!-- Icon-only variant (no label text) — set Tag same as IconButton and use ToolTip
+                 for the accessible/hover label instead of visible Content. -->
+            <DataTemplate x:Key="IconOnlyButtonContentTemplate">
+                <Image Source="{Binding RelativeSource={RelativeSource AncestorType=ButtonBase}, Path=Tag, Converter={x:Static local:IconPathConverter.Instance}}"
+                       Width="16" Height="16" />
+            </DataTemplate>
+            <Style x:Key="IconOnlyButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                <Setter Property="ContentTemplate" Value="{StaticResource IconOnlyButtonContentTemplate}" />
+                <Setter Property="Padding" Value="8,6" />
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>
