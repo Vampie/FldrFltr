@@ -112,8 +112,18 @@ namespace FldrFltr
             }
 
             // Saving under the name of an already-loaded/existing preset edits it in place
-            // (§1 "bewerken") instead of creating a duplicate entry.
+            // (§1 "bewerken") instead of creating a duplicate entry — but confirm first, since
+            // this silently overwrites whatever that preset held before.
             Preset existing = _presets.FirstOrDefault(p => string.Equals(p.Name, name, StringComparison.OrdinalIgnoreCase));
+            if (existing != null)
+            {
+                MessageBoxResult overwrite = MessageBox.Show(this, Localization.Get("Presets.ConfirmOverwrite", name),
+                    Localization.Get("Errors.Title"), MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (overwrite != MessageBoxResult.Yes)
+                {
+                    return;
+                }
+            }
             Preset preset = existing ?? new Preset { Name = name };
             preset.Folder = FolderTextBox.Text.Trim();
             preset.ExtensionFilter = ExtensionsTextBox.Text;

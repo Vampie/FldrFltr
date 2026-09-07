@@ -160,3 +160,23 @@ Bijgehouden per fase van [CLAUDE.md §5](../CLAUDE.md). Vink af zodra een fase w
         aanduiding zonder de accentkleur, zoals gevraagd.
       - Geverifieerd met screenshots onder Nord: proper uitgelijnd pijltje, zachte
         achtergrond-highlight op de huidige regel; Systeem-thema (licht) vertoont geen regressie.
+- [x] **Regressie uit de vorige stap hersteld + 3 kleine verbeteringen**:
+      - De "één laag + transparante ToggleButton erbovenop"-vereenvoudiging van de ComboBox-template
+        (vorige stap) bleek de dropdowns helemaal niet meer te laten openen. Teruggedraaid naar de
+        structuur waarbij de `ToggleButton` zelf de zichtbare Border+tekst+pijltje draagt (exact de
+        versie die eerder al met screenshots bevestigd werd te openen) — belangrijker dat hij
+        opengaat dan een mogelijk ingebeeld pixel-verschil in het pijltje.
+      - "Variabele invoegen" had geen "huidige regel"-aanduiding meer omdat `ContextMenu` en
+        `MenuItem` in normale staat én in `IsHighlighted`-staat toevallig dezelfde
+        `PageBackgroundBrush` gebruikten — geen zichtbaar verschil. Normale staat teruggezet naar de
+        kaderkleur (`SystemControlBackgroundChromeMediumLowBrush`), zodat de highlight-kleur weer
+        opvalt.
+      - `Preset.DisplayText` toont nu ook het pad: "Naam → Map → Extensielijst → Sjabloon".
+      - "Opslaan als preset..." vraagt nu eerst bevestiging wanneer de opgegeven naam al bestaat,
+        in plaats van die preset stilzwijgend te overschrijven.
+      - Laden/Verwijderen-knoppen in de presets-lijst staan nu vóór de tekst (vaste positie), zodat
+        rijen met een verschillende tekstlengte toch mooi uitlijnen.
+      - Kon deze ronde niet opnieuw met screenshots geverifieerd worden (de gebruiker was actief
+        aan het werk op de machine — vensterfocus overnemen voor screenshots was niet veilig/gepast
+        op dat moment); de ComboBox-fix is wel een letterlijke terugkeer naar reeds bevestigde
+        werkende code.

@@ -73,39 +73,37 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="ComboBox">
-                            <!-- One visual layer (Border + text + arrow, all in one Grid so
-                                 nothing overlaps/misaligns) with a fully transparent ToggleButton
-                                 on top purely for click handling — the previous version gave the
-                                 ToggleButton its own nested Border+arrow template, which doubled
-                                 up the chrome and threw the arrow's position off. -->
                             <Grid>
-                                <Border Background="{TemplateBinding Background}"
-                                        BorderBrush="{TemplateBinding BorderBrush}"
-                                        BorderThickness="{TemplateBinding BorderThickness}"
-                                        CornerRadius="4">
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="24" />
-                                        </Grid.ColumnDefinitions>
-                                        <ContentPresenter Grid.Column="0" x:Name="ContentSite" IsHitTestVisible="False"
-                                                          Content="{TemplateBinding SelectionBoxItem}"
-                                                          ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
-                                                          Margin="{TemplateBinding Padding}"
-                                                          HorizontalAlignment="Left" VerticalAlignment="Center" />
-                                        <Path Grid.Column="1" Data="M 0 0 L 4 4 L 8 0 Z"
-                                              Fill="{TemplateBinding Foreground}"
-                                              HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                    </Grid>
-                                </Border>
                                 <ToggleButton x:Name="ToggleButton" Focusable="False" ClickMode="Press"
+                                              Background="{TemplateBinding Background}"
+                                              BorderBrush="{TemplateBinding BorderBrush}"
+                                              BorderThickness="{TemplateBinding BorderThickness}"
+                                              Foreground="{TemplateBinding Foreground}"
                                               IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
                                     <ToggleButton.Template>
                                         <ControlTemplate TargetType="ToggleButton">
-                                            <Rectangle Fill="Transparent" />
+                                            <Border Background="{TemplateBinding Background}"
+                                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                                    CornerRadius="4">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="24" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Path Grid.Column="1" Data="M 0 0 L 4 4 L 8 0 Z"
+                                                          Fill="{TemplateBinding Foreground}"
+                                                          HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                </Grid>
+                                            </Border>
                                         </ControlTemplate>
                                     </ToggleButton.Template>
                                 </ToggleButton>
+                                <ContentPresenter x:Name="ContentSite" IsHitTestVisible="False"
+                                                  Content="{TemplateBinding SelectionBoxItem}"
+                                                  ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                                  Margin="{TemplateBinding Padding}"
+                                                  HorizontalAlignment="Left" VerticalAlignment="Center" />
                                 <Popup x:Name="Popup" IsOpen="{TemplateBinding IsDropDownOpen}"
                                        Placement="Bottom" AllowsTransparency="True" Focusable="False" PopupAnimation="Slide">
                                     <Border Background="{TemplateBinding Background}"
@@ -131,7 +129,7 @@
                  palette), so both get a full custom ControlTemplate using only TemplateBinding
                  against properties we set ourselves. -->
             <Style TargetType="ContextMenu">
-                <Setter Property="Background" Value="{DynamicResource PageBackgroundBrush}" />
+                <Setter Property="Background" Value="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}" />
                 <Setter Property="Foreground" Value="{DynamicResource PageForegroundBrush}" />
                 <Setter Property="BorderBrush" Value="{DynamicResource SystemControlForegroundAccentBrush}" />
                 <Setter Property="Template">
@@ -147,7 +145,11 @@
                 </Setter>
             </Style>
             <Style TargetType="MenuItem">
-                <Setter Property="Background" Value="{DynamicResource PageBackgroundBrush}" />
+                <!-- Normal-state background is the card color (same as ContextMenu's own
+                     background) so the IsHighlighted trigger's PageBackgroundBrush below is
+                     actually a *different* shade — using the same brush for both left the
+                     current/hovered line with no visible indicator at all. -->
+                <Setter Property="Background" Value="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}" />
                 <Setter Property="Foreground" Value="{DynamicResource PageForegroundBrush}" />
                 <Setter Property="BorderBrush" Value="{DynamicResource SystemControlForegroundAccentBrush}" />
                 <Setter Property="Padding" Value="8,5" />

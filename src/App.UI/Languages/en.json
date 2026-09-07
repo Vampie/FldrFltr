@@ -24,6 +24,7 @@
   "Presets.SaveNameTitle": "Save preset",
   "Presets.SaveNamePrompt": "Name for this preset:",
   "Presets.ConfirmDelete": "Delete preset '{0}'?",
+  "Presets.ConfirmOverwrite": "A preset named '{0}' already exists. Replace it?",
   "Presets.NoFieldsToSave": "Fill in Folder, Extension list and Name template first.",
 
   "Results.Title": "Result (after Test/Rename):",

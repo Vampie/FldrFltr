@@ -24,6 +24,7 @@
   "Presets.SaveNameTitle": "Preset opslaan",
   "Presets.SaveNamePrompt": "Naam voor deze preset:",
   "Presets.ConfirmDelete": "Preset '{0}' verwijderen?",
+  "Presets.ConfirmOverwrite": "Er bestaat al een preset met de naam '{0}'. Vervangen?",
   "Presets.NoFieldsToSave": "Vul eerst Map, Extensielijst en Naamsjabloon in.",
 
   "Results.Title": "Resultaat (na Testen/Hernoemen):",

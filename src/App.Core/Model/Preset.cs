@@ -13,7 +13,8 @@ namespace App.Core.Model
         public DateTime LastUsedUtc { get; set; }
 
         /// <summary>Human-readable one-liner for the presets list, e.g.
-        /// "Facturen → xml → {FileName}_{Year}.{Extension}" (matches the §1 mockup).</summary>
-        public string DisplayText => $"{Name} → {(string.IsNullOrWhiteSpace(ExtensionFilter) ? "*" : ExtensionFilter)} → {Template}";
+        /// "Facturen → C:\Facturen → xml → {FileName}_{Year}.{Extension}" (§1 mockup extended
+        /// with the folder path, per feedback).</summary>
+        public string DisplayText => $"{Name} → {Folder} → {(string.IsNullOrWhiteSpace(ExtensionFilter) ? "*" : ExtensionFilter)} → {Template}";
     }
 }

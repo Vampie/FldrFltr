@@ -76,13 +76,13 @@
                         <DataTemplate>
                             <Grid Margin="0,2">
                                 <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Text="{Binding DisplayText}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
-                                <Button Grid.Column="1" Content="{local:Loc Buttons.Load}" Tag="Icons/icon-import.png" Style="{StaticResource IconButton}" Padding="8,3" Margin="8,0,0,0" Click="PresetLoadButton_Click" />
-                                <Button Grid.Column="2" Content="{local:Loc Buttons.Delete}" Tag="Icons/icon-delete.png" Style="{StaticResource IconButton}" Padding="8,3" Margin="8,0,0,0" Click="PresetDeleteButton_Click" />
+                                <Button Grid.Column="0" Content="{local:Loc Buttons.Load}" Tag="Icons/icon-import.png" Style="{StaticResource IconButton}" Padding="8,3" Click="PresetLoadButton_Click" />
+                                <Button Grid.Column="1" Content="{local:Loc Buttons.Delete}" Tag="Icons/icon-delete.png" Style="{StaticResource IconButton}" Padding="8,3" Margin="6,0,0,0" Click="PresetDeleteButton_Click" />
+                                <TextBlock Grid.Column="2" Text="{Binding DisplayText}" VerticalAlignment="Center" Margin="8,0,0,0" TextTrimming="CharacterEllipsis" />
                             </Grid>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
