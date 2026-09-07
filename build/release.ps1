@@ -3,8 +3,10 @@
 .SYNOPSIS
     Bouwt FldrFltr in Release-configuratie en verpakt het resultaat als portable zip.
     Geen installer, geen snelkoppelingen, geen registry-writes — alles naast de exe.
-    Vult ook release\ToCopy met enkel de bestanden die gewijzigd zijn t.o.v. de vorige release
-    (gewiste eerst), zodat je bij het updaten van een klant-pc niet telkens alles moet overzetten.
+    Vult ook release\ToCopy aan met de bestanden die gewijzigd zijn t.o.v. de vorige release, zodat
+    je bij het updaten van een klant-pc niet telkens alles moet overzetten. Wordt NIET vooraf
+    geleegd — bestanden van releases die je nog niet hebt overgezet (bv. een paar versies
+    overgeslagen) blijven dus staan; leeg de map zelf na het kopiëren.
 
 .PARAMETER Version
     Major.Minor voor de release (bv. "1.0" of "1.0.0" — het patch-cijfer dat je hier meegeeft
@@ -94,14 +96,14 @@ if (Test-Path $TestDir) {
 }
 
 # ToCopy: enkel de bestanden die echt gewijzigd zijn t.o.v. de vorige release, zodat je bij het
-# updaten van een klant-pc niet telkens de hele map moet overzetten — gewiste en opnieuw gevuld op
-# elke build, dus er blijven nooit bestanden van een oudere release in staan.
+# updaten van een klant-pc niet telkens de hele map moet overzetten. Wordt bewust NIET geleegd
+# vooraf — als je een paar releases niet hebt overgezet, blijven de bestanden van die eerdere,
+# nog niet gekopieerde versies staan i.p.v. verloren te gaan. Zelf leegmaken na het kopiëren.
 $ToCopyDir = Join-Path $RepoRoot "release\ToCopy"
-Write-Host "-- ToCopy vullen ($ToCopyDir) --"
-if (Test-Path $ToCopyDir) {
-    Remove-Item $ToCopyDir -Recurse -Force
+Write-Host "-- ToCopy aanvullen ($ToCopyDir) --"
+if (-not (Test-Path $ToCopyDir)) {
+    New-Item -ItemType Directory -Path $ToCopyDir -Force | Out-Null
 }
-New-Item -ItemType Directory -Path $ToCopyDir -Force | Out-Null
 
 $PreviousDir = Get-ChildItem -Path (Join-Path $RepoRoot "release") -Directory -Filter "FldrFltr-*" |
     Where-Object { $_.Name -ne "FldrFltr-$FullVersion" } |

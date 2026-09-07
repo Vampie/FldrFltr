@@ -18,9 +18,11 @@ logical spot once a version is done.
   result when loading") controls only whether *loading* a preset auto-expands the table this way
   — the preset's dry run itself always still runs. (The variable-help side panel's list is capped
   at a max height so it scrolls internally instead of forcing the whole window to grow with it.)
-- **`release/ToCopy`**: every `release.ps1` run now clears and refills this folder with only the
-  files that actually changed compared to the previous release (byte-compared, not by timestamp)
-  — so updating a customer's remote PC only needs those files, not the whole install.
+- **`release/ToCopy`**: every `release.ps1` run adds the files that actually changed compared to
+  the previous release (byte-compared, not by timestamp) — so updating a customer's remote PC
+  only needs those files, not the whole install. Not cleared automatically (skipping a few
+  releases without copying them would otherwise lose those files) — clear it yourself once you've
+  copied its contents over.
 
 - **Variable overview**: two ways to see what each `{Variable}` in the name template means,
   without blocking the rest of the app — an always-on-top popup window ("Help" button, non-modal)
