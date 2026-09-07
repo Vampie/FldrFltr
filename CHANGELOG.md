@@ -10,6 +10,11 @@ logical spot once a version is done.
   without blocking the rest of the app — an always-on-top popup window ("Help" button, non-modal)
   and a collapsible side panel (toggle button), both showing the same grouped list with
   descriptions.
+- **Target .NET Framework 4.8, not 4.8.1**: a customer machine refused to start the exe at all
+  ("This application requires .NETFramework,Version=v4.8.1") and couldn't install the missing
+  runtime. 4.8.1 (May 2022) is only preinstalled from Windows 11 22H2 onward; plain 4.8 (April
+  2019) ships on far more machines (most Windows 10 installs since 2019, all Windows 11), so all
+  three projects and `release.ps1` now target/publish `net48` instead of `net481`.
 
 ## v1
 

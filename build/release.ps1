@@ -23,7 +23,7 @@ $ErrorActionPreference = "Stop"
 $RepoRoot     = Split-Path -Parent $PSScriptRoot
 $SlnPath      = Join-Path $RepoRoot "FldrFltr.slnx"
 $IconPng      = Join-Path $RepoRoot "fldrfltr.png"
-$PublishSrc   = Join-Path $RepoRoot "src\App.UI\bin\Release\net481"
+$PublishSrc   = Join-Path $RepoRoot "src\App.UI\bin\Release\net48"
 $CounterPath  = Join-Path $PSScriptRoot ".build-counter"
 
 $VersionParts = $Version.Split(".")

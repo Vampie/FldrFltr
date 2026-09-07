@@ -6,7 +6,9 @@ move/reorganize) them via a name template with variables (`{FileName}`, `{Year}`
 
 ## Stack
 
-- WPF + [ModernWpfUI](https://github.com/Kinnara/ModernWpf) on .NET Framework 4.8.1
+- WPF + [ModernWpfUI](https://github.com/Kinnara/ModernWpf) on .NET Framework 4.8 (chosen over
+  4.8.1 so the app also runs on machines that only have the older, far more commonly preinstalled
+  4.8 runtime — see CHANGELOG.md)
 - Portable: `settings.json` and `presets.json` next to the exe (with timestamped backups), no
   `%AppData%`, no registry
 - Multilingual (`Languages/*.json`, nl/en), fully customizable themes (`Themes/*.json`) from day one
