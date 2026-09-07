@@ -1,4 +1,6 @@
 {
   "Base": "Dark",
-  "AccentColor": "#FFC23B00"
+  "AccentColor": "#FFC23B00",
+  "Background": "#FF222C28",
+  "Foreground": "#FFFFFFFF"
 }

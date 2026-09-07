@@ -4,6 +4,8 @@
         xmlns:local="clr-namespace:FldrFltr"
         xmlns:ui="http://schemas.modernwpf.com/2019"
         ui:WindowHelper.UseModernWindowStyle="True"
+        Background="{DynamicResource PageBackgroundBrush}"
+        Foreground="{DynamicResource PageForegroundBrush}"
         Title="{local:Loc MainWindow.Title}"
         Height="680" Width="800" MinHeight="540" MinWidth="640">
     <Grid Margin="16">

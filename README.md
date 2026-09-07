@@ -102,3 +102,14 @@ Bijgehouden per fase van [CLAUDE.md §5](../CLAUDE.md). Vink af zodra een fase w
       - Thema-combobox verbreed naar 220px voor de langste namen ("Nautical but Nice")
       - Geverifieerd met screenshots: Dracula (donker), Khaki (licht) en Slush & Poppies (licht,
         bestandsnaam met "&") renderen allemaal correct
+- [x] **Thema's tonen nu ook echt hun eigen kleur** (niet enkel licht/donker + een geaccentueerde
+      knoprand): elk `Themes\*.json`-bestand kreeg een `Background` en `Foreground` naast Base en
+      AccentColor. `ThemeProvider` zet die direct op het venster (`MainWindow`'s `Background`/
+      `Foreground` binden op `PageBackgroundBrush`/`PageForegroundBrush`) én overschrijft
+      ModernWpf's eigen kaartkleur-sleutel (`SystemControlBackgroundChromeMediumLowBrush`, dezelfde
+      die `CardBorder` al gebruikte) met een variant die iets richting wit/zwart geduwd is, zodat
+      kaarten nog steeds "verhoogd" aanvoelen boven de paginakleur. Voor de 3 basisthema's
+      (Systeem/Licht/Donker) worden deze sleutels niet gezet — die blijven exact zoals voorheen
+      (ModernWpf's eigen licht/donker-chrome), enkel de nieuwe paletten worden echt kleurrijk.
+      Geverifieerd met screenshots: Choco (bruin), MossyLawn (olijfgroen), Nord (blauwgrijs) tonen
+      nu allemaal hun eigen achtergrondkleur in plaats van generiek wit/zwart.
