@@ -1,7 +1,9 @@
 using System;
 using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -18,6 +20,12 @@ namespace FldrFltr
         private readonly AppSettings _settings;
         private readonly ObservableCollection<Preset> _presets;
         private bool _isInitializing = true;
+
+        /// <summary>Name of the preset the user last loaded (double-clicked), so "Opslaan als
+        /// preset..." can pre-fill it — saving under the same name then just edits that preset
+        /// instead of asking for a fresh name every time. Null until a preset is loaded or saved
+        /// this session.</summary>
+        private string _lastLoadedPresetName;
 
         public MainWindow()
         {
@@ -66,28 +74,59 @@ namespace FldrFltr
         private void InsertVariableButton_Click(object sender, RoutedEventArgs e) =>
             VariableMenuHelper.ShowVariableMenu((Button)sender, TemplateTextBox);
 
-        private void TestDryRunButton_Click(object sender, RoutedEventArgs e) => RunPlan(execute: false);
+        private async void TestDryRunButton_Click(object sender, RoutedEventArgs e) => await RunPlanAsync(execute: false);
 
-        private void RenameButton_Click(object sender, RoutedEventArgs e) => RunPlan(execute: true);
+        private async void RenameButton_Click(object sender, RoutedEventArgs e) => await RunPlanAsync(execute: true);
 
-        private void RunPlan(bool execute)
+        /// <summary>Runs FileMatcher/rename on a background thread so the UI stays responsive,
+        /// with a simple status text (no real progress bar needed — see StatusTextBlock in
+        /// MainWindow.xaml) showing "busy" while it runs and a result summary once it's done.</summary>
+        private async Task RunPlanAsync(bool execute)
         {
+            SetBusy(Localization.Get(execute ? "Status.Busy.Rename" : "Status.Busy.Test"));
             try
             {
                 RenameOptions options = BuildOptionsFromFields();
-                var plan = RenameEngine.BuildPlan(options);
-                if (execute)
+                List<RenamePlan> plan = await Task.Run(() =>
                 {
-                    RenameEngine.Execute(plan);
-                }
+                    List<RenamePlan> builtPlan = RenameEngine.BuildPlan(options);
+                    if (execute)
+                    {
+                        RenameEngine.Execute(builtPlan);
+                    }
+                    return builtPlan;
+                });
 
                 ResultsDataGrid.ItemsSource = plan.Select(p => new RenameResultRow(p)).ToList();
+                StatusTextBlock.Text = Localization.Get(execute ? "Status.Done.Rename" : "Status.Done.Test", plan.Count);
             }
             catch (DirectoryNotFoundException)
             {
+                StatusTextBlock.Text = string.Empty;
                 MessageBox.Show(this, Localization.Get("Errors.FolderMissing"), Localization.Get("Errors.Title"),
                     MessageBoxButton.OK, MessageBoxImage.Warning);
             }
+            finally
+            {
+                SetBusy(null);
+            }
+        }
+
+        /// <summary>Toggles the "busy" state: a status message plus disabling the buttons that
+        /// would let the user start a second run (or edit the fields/preset) while one is already
+        /// in flight. Pass null to clear the busy state (the caller sets StatusTextBlock's final
+        /// text separately once the result is known).</summary>
+        private void SetBusy(string busyText)
+        {
+            bool isBusy = busyText != null;
+            if (isBusy)
+            {
+                StatusTextBlock.Text = busyText;
+            }
+
+            TestDryRunButton.IsEnabled = !isBusy;
+            RenameButton.IsEnabled = !isBusy;
+            SaveAsPresetButton.IsEnabled = !isBusy;
         }
 
         private RenameOptions BuildOptionsFromFields() => new RenameOptions
@@ -107,8 +146,10 @@ namespace FldrFltr
                 return;
             }
 
+            // Pre-filled with the last preset the user loaded (or saved) this session, so
+            // re-saving over the same preset is just "confirm" instead of retyping its name.
             string name = Microsoft.VisualBasic.Interaction.InputBox(
-                Localization.Get("Presets.SaveNamePrompt"), Localization.Get("Presets.SaveNameTitle"));
+                Localization.Get("Presets.SaveNamePrompt"), Localization.Get("Presets.SaveNameTitle"), _lastLoadedPresetName);
             if (string.IsNullOrWhiteSpace(name))
             {
                 return; // cancelled
@@ -142,9 +183,10 @@ namespace FldrFltr
                 PresetsListBox.Items.Refresh(); // Preset isn't INotifyPropertyChanged — force the DisplayText update
             }
             _presetStore.SaveAll(_presets.ToList());
+            _lastLoadedPresetName = preset.Name;
         }
 
-        private void PresetsListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private async void PresetsListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             // Double-clicking the Delete button itself would also bubble up as a ListBox
             // double-click — but by then the preset is already removed from _presets, so
@@ -152,6 +194,7 @@ namespace FldrFltr
             if (PresetsListBox.SelectedItem is Preset preset)
             {
                 LoadPreset(preset);
+                await RunPlanAsync(execute: false); // dry-run straight away so results show what the preset would do
             }
         }
 
@@ -163,6 +206,7 @@ namespace FldrFltr
 
             preset.LastUsedUtc = DateTime.UtcNow;
             _presetStore.SaveAll(_presets.ToList());
+            _lastLoadedPresetName = preset.Name;
         }
 
         private void PresetDeleteButton_Click(object sender, RoutedEventArgs e)

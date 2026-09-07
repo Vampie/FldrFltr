@@ -38,6 +38,11 @@
   "Status.SkippedConflict": "Overgeslagen (naamconflict)",
   "Status.Error": "Fout: {0}",
 
+  "Status.Busy.Test": "Bezig met testen...",
+  "Status.Busy.Rename": "Bezig met hernoemen...",
+  "Status.Done.Test": "Klaar — {0} bestand(en) getest.",
+  "Status.Done.Rename": "Klaar — {0} bestand(en) verwerkt.",
+
   "Settings.Language": "Taal:",
   "Settings.Theme": "Thema:",
   "Settings.LanguageChangedRestartRequired": "Herstart FldrFltr om de nieuwe taal toe te passen.",

@@ -38,6 +38,11 @@
   "Status.SkippedConflict": "Skipped (name conflict)",
   "Status.Error": "Error: {0}",
 
+  "Status.Busy.Test": "Testing...",
+  "Status.Busy.Rename": "Renaming...",
+  "Status.Done.Test": "Done — {0} file(s) tested.",
+  "Status.Done.Rename": "Done — {0} file(s) processed.",
+
   "Settings.Language": "Language:",
   "Settings.Theme": "Theme:",
   "Settings.LanguageChangedRestartRequired": "Restart FldrFltr to apply the new language.",

@@ -117,7 +117,13 @@
         <!-- Resultaat-tabel na Testen/Hernoemen (§1). -->
         <Border Grid.Row="5" Style="{StaticResource CardBorder}">
             <DockPanel>
-                <TextBlock DockPanel.Dock="Top" Text="{local:Loc Results.Title}" FontWeight="SemiBold" Margin="0,0,0,8" />
+                <DockPanel DockPanel.Dock="Top" Margin="0,0,0,8">
+                    <TextBlock Text="{local:Loc Results.Title}" FontWeight="SemiBold" />
+                    <!-- Geen echte voortgangsbalk nodig — enkel een simpele statustekst zodat
+                         zichtbaar is dat de app aan het testen/hernoemen is, en wanneer het klaar
+                         is. -->
+                    <TextBlock x:Name="StatusTextBlock" DockPanel.Dock="Right" HorizontalAlignment="Right" Opacity="0.8" />
+                </DockPanel>
                 <DataGrid x:Name="ResultsDataGrid" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="{local:Loc Results.ColumnFrom}" Binding="{Binding From}" Width="*" />

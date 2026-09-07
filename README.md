@@ -280,3 +280,22 @@ Bijgehouden per fase van [CLAUDE.md §5](../CLAUDE.md). Vink af zodra een fase w
       - Kon ook deze ronde niet met een screenshot geverifieerd worden (gebruiker nog steeds actief
         in een andere applicatie); wel gecontroleerd dat de app zonder fouten opstart. Graag zelf
         even bevestigen.
+- [x] **Preset dubbelklikken doet meteen een dry-run, onthoudt de presetnaam voor opslaan, en een
+      simpele bezig/klaar-indicatie i.p.v. een echte voortgangsbalk**:
+      - Dubbelklikken op een preset (`PresetsListBox_MouseDoubleClick`) laadt de 3 velden én start
+        meteen een "Testen (dry-run)", zodat het resultaat direct zichtbaar is.
+      - De naam van de laatst geladen (of opgeslagen) preset wordt onthouden
+        (`_lastLoadedPresetName`) en gebruikt als voorstel wanneer je nadien "Opslaan als
+        preset..." aanklikt (`Interaction.InputBox`'s `DefaultResponse`) — opnieuw opslaan onder
+        dezelfde preset is dan gewoon bevestigen i.p.v. de naam opnieuw intikken.
+      - `RunPlan` omgezet naar `RunPlanAsync`: het eigenlijke matchen/hernoemen draait nu op een
+        achtergrondthread (`Task.Run`) zodat de UI niet blokkeert, met een nieuwe
+        `StatusTextBlock` naast de "Resultaat"-titel die "Bezig met testen/hernoemen..." toont
+        terwijl het loopt en "Klaar — N bestand(en) ..." erna — geen echte voortgangsbalk, zoals
+        gevraagd. Testen/Hernoemen/Opslaan als preset-knoppen zijn uitgeschakeld tijdens het
+        lopen, zodat je geen tweede run kan starten terwijl de eerste nog bezig is.
+      - Geverifieerd met UI Automation (zonder de muis/vensterfocus van de gebruiker over te
+        nemen, die op dat moment nog actief was in een andere applicatie): waarden in de velden
+        gezet via `ValuePattern`, "Testen" geactiveerd via `InvokePattern`, en nadien gecontroleerd
+        dat de statustekst "Klaar — 4 bestand(en) getest." toont, de 3 knoppen weer ingeschakeld
+        zijn, en de resultaattabel 4 rijen bevat.
