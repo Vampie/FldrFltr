@@ -65,7 +65,13 @@ namespace FldrFltr
                 ? (Color?)null
                 : (Color)ColorConverter.ConvertFromString(accentHex);
 
-            ApplyPageColors(backgroundHex, foregroundHex);
+            // ActualApplicationTheme resolves "follow system" (baseTheme null, i.e. "Systeem") to
+            // the OS's actual current Light/Dark — used so the built-ins get a real page
+            // background/foreground too instead of leaving Window.Background's DynamicResource
+            // unresolved (that used to fall through to a stray OS/system-accent blue, not the
+            // intended plain light/dark).
+            bool isDark = ThemeManager.Current.ActualApplicationTheme == ApplicationTheme.Dark;
+            ApplyPageColors(backgroundHex, foregroundHex, isDark, isCustomPalette: !string.IsNullOrEmpty(backgroundHex));
         }
 
         private static (ApplicationTheme?, string accent, string background, string foreground) Resolve(string themeName)
@@ -97,35 +103,39 @@ namespace FldrFltr
             return (based, file.AccentColor, file.Background, file.Foreground);
         }
 
-        /// <summary>Overrides the window's own background/foreground and the card surface color
-        /// directly in Application.Resources — a dictionary's own entries take precedence over
-        /// the same key defined inside its MergedDictionaries, so this shadows ModernWpf's default
-        /// card brush without needing to touch App.xaml. Removing the keys (built-ins/System) lets
-        /// that default show through again instead of leaving a stale color behind.</summary>
-        private static void ApplyPageColors(string backgroundHex, string foregroundHex)
+        /// <summary>Always sets the window's own background/foreground directly in
+        /// Application.Resources — a dictionary's own entries take precedence over the same key
+        /// defined inside its MergedDictionaries. For a built-in theme (no custom Background) this
+        /// still computes a plain light/dark color (rather than leaving the resource key entirely
+        /// absent, which used to leave Window.Background's DynamicResource unresolved and fall
+        /// back to a stray blue). The card surface color
+        /// (SystemControlBackgroundChromeMediumLowBrush, the same key CardBorder already used) is
+        /// only overridden for a genuine custom palette — built-ins keep ModernWpf's own card
+        /// shading, which already looks right without help.</summary>
+        private static void ApplyPageColors(string backgroundHex, string foregroundHex, bool isDark, bool isCustomPalette)
         {
             ResourceDictionary resources = Application.Current.Resources;
 
-            if (string.IsNullOrEmpty(backgroundHex))
+            Color background = string.IsNullOrEmpty(backgroundHex)
+                ? (isDark ? Color.FromRgb(0x20, 0x20, 0x20) : Colors.White)
+                : (Color)ColorConverter.ConvertFromString(backgroundHex);
+            Color foreground = string.IsNullOrEmpty(foregroundHex)
+                ? (IsDark(background) ? Colors.White : Colors.Black)
+                : (Color)ColorConverter.ConvertFromString(foregroundHex);
+
+            resources[PageBackgroundResourceKey] = new SolidColorBrush(background);
+            resources[PageForegroundResourceKey] = new SolidColorBrush(foreground);
+
+            if (!isCustomPalette)
             {
-                resources.Remove(PageBackgroundResourceKey);
-                resources.Remove(PageForegroundResourceKey);
                 resources.Remove(CardBackgroundResourceKey);
                 return;
             }
 
-            Color background = (Color)ColorConverter.ConvertFromString(backgroundHex);
-            bool backgroundIsDark = IsDark(background);
-            Color foreground = string.IsNullOrEmpty(foregroundHex)
-                ? (backgroundIsDark ? Colors.White : Colors.Black)
-                : (Color)ColorConverter.ConvertFromString(foregroundHex);
             // Card surface: same hue as the page, nudged toward white (dark bg) or black (light
             // bg) so panels stay visually "raised" instead of blending into the page.
-            Color card = Blend(background, backgroundIsDark ? Colors.White : Colors.Black, backgroundIsDark ? 0.12 : 0.06);
-
-            resources[PageBackgroundResourceKey] = new SolidColorBrush(background);
-            resources[PageForegroundResourceKey] = new SolidColorBrush(foreground);
-            resources[CardBackgroundResourceKey] = new SolidColorBrush(card);
+            resources[CardBackgroundResourceKey] = new SolidColorBrush(
+                Blend(background, IsDark(background) ? Colors.White : Colors.Black, IsDark(background) ? 0.12 : 0.06));
         }
 
         private static bool IsDark(Color color) =>

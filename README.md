@@ -113,3 +113,20 @@ Bijgehouden per fase van [CLAUDE.md §5](../CLAUDE.md). Vink af zodra een fase w
       (ModernWpf's eigen licht/donker-chrome), enkel de nieuwe paletten worden echt kleurrijk.
       Geverifieerd met screenshots: Choco (bruin), MossyLawn (olijfgroen), Nord (blauwgrijs) tonen
       nu allemaal hun eigen achtergrondkleur in plaats van generiek wit/zwart.
+- [x] **Bugfix: Systeem/Licht/Donker toonden een blauwe achtergrond.** Oorzaak: `MainWindow`'s
+      `Background`/`Foreground` bonden op `PageBackgroundBrush`/`PageForegroundBrush`, maar voor de
+      3 basisthema's werden die sleutels helemaal niet gezet (bewust, om ModernWpf's eigen
+      licht/donker-chrome niet te verstoren) — een `DynamicResource` die nergens naar kan
+      resolven valt terug op een systeemkleur (op deze pc toevallig blauw), niet op gewoon wit/
+      zwart. Fix: `ThemeProvider` zet deze twee sleutels nu altijd, ook voor de basisthema's —
+      via `ThemeManager.Current.ActualApplicationTheme` (lost "Systeem" ook echt op naar de actuele
+      OS-instelling) wordt een gewone wit/bijna-zwart kleur berekend wanneer er geen eigen
+      Background in het paletbestand staat. Geverifieerd: Systeem is weer wit, Donker weer
+      bijna-zwart.
+- [x] **Rand van knoppen, dropdowns en de 3 kaders is nu de accentkleur**, voor alle thema's
+      (ook Systeem/Licht/Donker, die de OS-accentkleur gebruiken bij gebrek aan een eigen
+      AccentColor). Twee nieuwe implicte stijlen in `App.xaml` (`TargetType="Button"` /
+      `"ComboBox"`, geen `x:Key`, dus automatisch overal van toepassing) zetten `BorderBrush` op
+      `SystemControlForegroundAccentBrush`; `CardBorder`'s `BorderBrush` kreeg dezelfde sleutel.
+      Geverifieerd: Neon-thema toont neongroene randen (zijn eigen accent) op knoppen, dropdowns
+      én de 3 kaders, in plaats van het generieke Windows-accent.

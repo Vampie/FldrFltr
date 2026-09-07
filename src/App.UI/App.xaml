@@ -12,13 +12,25 @@
                 <ui:XamlControlsResources />
             </ResourceDictionary.MergedDictionaries>
 
-            <!-- Soft "card" surface for grouping content — same idea as FldrSrtr's CardBorder. -->
+            <!-- Soft "card" surface for grouping content — same idea as FldrSrtr's CardBorder.
+                 BorderBrush is the accent color (per the user's request: buttons/dropdowns/the
+                 3 card frames should all share the theme's accent as their border). -->
             <Style x:Key="CardBorder" TargetType="Border">
                 <Setter Property="Background" Value="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}" />
-                <Setter Property="BorderBrush" Value="{DynamicResource SystemControlForegroundBaseLowBrush}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource SystemControlForegroundAccentBrush}" />
                 <Setter Property="BorderThickness" Value="1" />
                 <Setter Property="CornerRadius" Value="6" />
                 <Setter Property="Padding" Value="12" />
+            </Style>
+
+            <!-- Every Button/ComboBox gets an accent-colored border (same request as CardBorder
+                 above) — implicit styles (no x:Key) so this applies app-wide without touching
+                 each control's markup, same approach as FldrSrtr's IconButton. -->
+            <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                <Setter Property="BorderBrush" Value="{DynamicResource SystemControlForegroundAccentBrush}" />
+            </Style>
+            <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+                <Setter Property="BorderBrush" Value="{DynamicResource SystemControlForegroundAccentBrush}" />
             </Style>
 
             <!-- Icon buttons: set Tag to an icon's filename (e.g. "Icons/icon-save.png" — the
