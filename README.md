@@ -135,3 +135,16 @@ Bijgehouden per fase van [CLAUDE.md §5](../CLAUDE.md). Vink af zodra een fase w
       `SystemControlForegroundAccentBrush`; `CardBorder`'s `BorderBrush` kreeg dezelfde sleutel.
       Geverifieerd: Neon-thema toont neongroene randen (zijn eigen accent) op knoppen, dropdowns
       én de 3 kaders, in plaats van het generieke Windows-accent.
+- [x] **Bugfix: de 3 dropdowns (Taal/Thema/Bij naamconflict) en het "Variabele invoegen"-menu
+      bleven altijd wit/zwart**, ongeacht het thema — onleesbaar bij donkere paletten met witte
+      tekst. Oorzaak: geverifieerd dat ModernWpfUI's eigen ComboBox/ContextMenu/MenuItem-chrome op
+      net481 een gewone `Background`/`Foreground`-`Setter` gewoon negeert (pixel-gemeten: bleef
+      exact `#EAEAEA`, ongewijzigd, terwijl TextBox/Button/Border ernaast wél correct meekleurden
+      met dezelfde sleutels). Fix: volledig eigen `ControlTemplate` voor `ComboBox`,
+      `ComboBoxItem`, `ContextMenu` en `MenuItem` in `App.xaml`, opgebouwd met alleen
+      `TemplateBinding` tegen properties die wij zelf zetten — dropdown-achtergrond = kaderkleur
+      (`SystemControlBackgroundChromeMediumLowBrush`), tekst = paginatekstkleur
+      (`PageForegroundBrush`), rand + gemarkeerd item = accentkleur. Geverifieerd met
+      screenshots onder het Nord-thema: gesloten dropdown, open dropdown-lijst, en het
+      "Variabele invoegen"-menu (incl. submenu "Bestand") tonen nu allemaal Nord's blauwgrijze
+      achtergrond met witte tekst; Systeem-thema (licht) vertoont geen regressie.

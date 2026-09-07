@@ -25,12 +25,165 @@
 
             <!-- Every Button/ComboBox gets an accent-colored border (same request as CardBorder
                  above) — implicit styles (no x:Key) so this applies app-wide without touching
-                 each control's markup, same approach as FldrSrtr's IconButton. -->
+                 each control's markup, same approach as FldrSrtr's IconButton. ComboBox also gets
+                 an explicit Background/Foreground: ModernWpfUI's own ComboBox chrome doesn't pick
+                 up ApplicationTheme/AccentColor changes on net481 (its closed box stayed a fixed
+                 near-white regardless of theme — a TextBox/Button/Border right next to it themed
+                 correctly), so it needs the same card-surface color and page text color spelled
+                 out directly instead of relying on ModernWpf's own (here, seemingly stuck)
+                 brushes. -->
             <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
                 <Setter Property="BorderBrush" Value="{DynamicResource SystemControlForegroundAccentBrush}" />
             </Style>
-            <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+            <!-- ComboBox needed a full custom ControlTemplate, not just Setters: ModernWpfUI's own
+                 ComboBox chrome on net481 ignores the outer Background/Foreground properties
+                 entirely (verified — setting them via a plain Style Setter left the closed box a
+                 fixed light gray regardless of theme, while the exact same DynamicResource keys
+                 correctly repainted Button/TextBox/Border right next to it). Every element below
+                 uses {TemplateBinding} against ComboBox's own properties, which we fully control,
+                 so there's nothing ModernWpf-internal left to fight. -->
+            <Style TargetType="ComboBoxItem">
+                <Setter Property="Padding" Value="8,6" />
+                <Setter Property="Background" Value="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}" />
+                <Setter Property="Foreground" Value="{DynamicResource PageForegroundBrush}" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ComboBoxItem">
+                            <Border x:Name="Bg" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                                <ContentPresenter />
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsHighlighted" Value="True">
+                                    <Setter TargetName="Bg" Property="Background" Value="{DynamicResource SystemControlForegroundAccentBrush}" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style TargetType="ComboBox">
+                <Setter Property="Background" Value="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}" />
+                <Setter Property="Foreground" Value="{DynamicResource PageForegroundBrush}" />
                 <Setter Property="BorderBrush" Value="{DynamicResource SystemControlForegroundAccentBrush}" />
+                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="Padding" Value="8,5" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ComboBox">
+                            <Grid>
+                                <ToggleButton x:Name="ToggleButton" Focusable="False" ClickMode="Press"
+                                              Background="{TemplateBinding Background}"
+                                              BorderBrush="{TemplateBinding BorderBrush}"
+                                              BorderThickness="{TemplateBinding BorderThickness}"
+                                              Foreground="{TemplateBinding Foreground}"
+                                              IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
+                                    <ToggleButton.Template>
+                                        <ControlTemplate TargetType="ToggleButton">
+                                            <Border Background="{TemplateBinding Background}"
+                                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                                    CornerRadius="4">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="24" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Path Grid.Column="1" Data="M 0 0 L 4 4 L 8 0 Z"
+                                                          Fill="{TemplateBinding Foreground}"
+                                                          HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                </Grid>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </ToggleButton.Template>
+                                </ToggleButton>
+                                <ContentPresenter x:Name="ContentSite" IsHitTestVisible="False"
+                                                  Content="{TemplateBinding SelectionBoxItem}"
+                                                  ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                                  Margin="{TemplateBinding Padding}"
+                                                  HorizontalAlignment="Left" VerticalAlignment="Center" />
+                                <Popup x:Name="Popup" IsOpen="{TemplateBinding IsDropDownOpen}"
+                                       Placement="Bottom" AllowsTransparency="True" Focusable="False" PopupAnimation="Slide">
+                                    <Border Background="{TemplateBinding Background}"
+                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                            CornerRadius="4" MaxHeight="320"
+                                            MinWidth="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}">
+                                        <ScrollViewer SnapsToDevicePixels="True">
+                                            <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Contained" />
+                                        </ScrollViewer>
+                                    </Border>
+                                </Popup>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- The "Variabele invoegen" dropdown (a plain ContextMenu/MenuItem, see
+                 VariableMenuHelper) — same story as ComboBox above: ModernWpfUI's own
+                 ContextMenu/MenuItem chrome ignored plain Background/Foreground Setters (verified
+                 — it stayed plain white-on-black/black-on-white regardless of the active
+                 palette), so both get a full custom ControlTemplate using only TemplateBinding
+                 against properties we set ourselves. -->
+            <Style TargetType="ContextMenu">
+                <Setter Property="Background" Value="{DynamicResource PageBackgroundBrush}" />
+                <Setter Property="Foreground" Value="{DynamicResource PageForegroundBrush}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource SystemControlForegroundAccentBrush}" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ContextMenu">
+                            <Border Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="1" Padding="2" CornerRadius="4">
+                                <StackPanel IsItemsHost="True" />
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style TargetType="MenuItem">
+                <Setter Property="Background" Value="{DynamicResource PageBackgroundBrush}" />
+                <Setter Property="Foreground" Value="{DynamicResource PageForegroundBrush}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource SystemControlForegroundAccentBrush}" />
+                <Setter Property="Padding" Value="8,5" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="MenuItem">
+                            <Grid>
+                                <Border x:Name="Bg" Background="{TemplateBinding Background}" CornerRadius="3">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="18" />
+                                        </Grid.ColumnDefinitions>
+                                        <ContentPresenter Grid.Column="0" ContentSource="Header"
+                                                          Margin="{TemplateBinding Padding}" VerticalAlignment="Center" />
+                                        <Path x:Name="Arrow" Grid.Column="1" Data="M 0 0 L 4 4 L 0 8 Z"
+                                              Fill="{TemplateBinding Foreground}"
+                                              HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </Grid>
+                                </Border>
+                                <Popup x:Name="Popup" Placement="Right" HorizontalOffset="-4"
+                                       IsOpen="{Binding IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}"
+                                       AllowsTransparency="True" Focusable="False" PopupAnimation="Fade">
+                                    <Border Background="{TemplateBinding Background}"
+                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                            BorderThickness="1" Padding="2" CornerRadius="4">
+                                        <StackPanel IsItemsHost="True" />
+                                    </Border>
+                                </Popup>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsHighlighted" Value="True">
+                                    <Setter TargetName="Bg" Property="Background" Value="{DynamicResource SystemControlForegroundAccentBrush}" />
+                                </Trigger>
+                                <Trigger Property="HasItems" Value="False">
+                                    <Setter TargetName="Arrow" Property="Visibility" Value="Collapsed" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
             </Style>
 
             <!-- Icon buttons: set Tag to an icon's filename (e.g. "Icons/icon-save.png" — the
