@@ -256,3 +256,15 @@ Bijgehouden per fase van [CLAUDE.md §5](../CLAUDE.md). Vink af zodra een fase w
       in een andere applicatie — vensterfocus overnemen was niet gepast op dat moment); het is een
       kleine, op zichzelf staande XAML-herstructurering (rijen samengevoegd in één `Border`), graag
       zelf even bevestigen.
+- [x] **Presets-lijst: Laden-knop weg, Verwijderen rechts uitgelijnd, dubbelklik laadt**:
+      "Laden" is verwijderd — dubbelklikken op een rij laadt die preset nu rechtstreeks
+      (`PresetsListBox_MouseDoubleClick`, leest `SelectedItem`). "Verwijderen" staat niet meer
+      vóór de tekst maar aan het rechtereind van de rij (kolommen omgedraaid: tekst `*`,
+      knop `Auto`), zodat de knop bij elke rij op dezelfde plaats staat ongeacht de tekstlengte.
+      Gedeelde "vul de 3 velden"-logica van de oude Laden-knop verhuisd naar een
+      `LoadPreset(Preset)`-methode.
+- [x] **"Hernoemen" in zijn eigen kaart, boven de testen/opslaan-kaart**: niet langer onderaan de
+      testen/opslaan-kaart, maar een aparte, eigen `CardBorder` ertussen de velden-kaart en de
+      testen/opslaan-kaart in.
+      Kon deze keer niet met een screenshot geverifieerd worden (gebruiker was actief in een
+      andere applicatie); graag zelf even bevestigen (vooral het dubbelklik-gedrag).

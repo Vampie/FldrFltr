@@ -12,7 +12,8 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" /> <!-- taal/thema -->
             <RowDefinition Height="Auto" /> <!-- drie velden -->
-            <RowDefinition Height="Auto" /> <!-- actiekaart: actieknoppen + hernoemen -->
+            <RowDefinition Height="Auto" /> <!-- hernoemen: eigen kaart -->
+            <RowDefinition Height="Auto" /> <!-- actiekaart: testen/opslaan/naamconflict -->
             <RowDefinition Height="Auto" /> <!-- presets: sized to content, capped via the ListBox's MaxHeight -->
             <RowDefinition Height="*" />    <!-- resultaat: takes all remaining space -->
         </Grid.RowDefinitions>
@@ -57,27 +58,30 @@
             </Grid>
         </Border>
 
-        <!-- Actieknoppen (§1: altijd eerst Testen (dry-run), nooit stilzwijgend overschrijven) — in
-             hun eigen kaart, zelfde stijl als de andere 3 blokken. -->
+        <!-- Hernoemen: eigen kaart, boven de testen/opslaan-kaart. -->
         <Border Grid.Row="2" Style="{StaticResource CardBorder}" Margin="0,0,0,12">
-            <StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
-                    <Button x:Name="TestDryRunButton" Content="{local:Loc Buttons.TestDryRun}" Tag="Icons/icon-inspect.png" Style="{StaticResource IconButton}" Margin="0,0,8,0" Click="TestDryRunButton_Click" />
-                    <Button x:Name="SaveAsPresetButton" Content="{local:Loc Buttons.SaveAsPreset}" Tag="Icons/icon-save.png" Style="{StaticResource IconButton}" Margin="0,0,16,0" Click="SaveAsPresetButton_Click" />
-                    <TextBlock Text="{local:Loc Fields.ConflictPolicy}" VerticalAlignment="Center" Margin="0,0,6,0" />
-                    <ComboBox x:Name="ConflictPolicyComboBox" Width="220" VerticalAlignment="Center" />
-                </StackPanel>
-                <Button x:Name="RenameButton" Content="{local:Loc Buttons.Rename}" Tag="Icons/icon-run.png" Style="{StaticResource IconButton}"
-                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Padding="12,10" Click="RenameButton_Click" />
+            <Button x:Name="RenameButton" Content="{local:Loc Buttons.Rename}" Tag="Icons/icon-run.png" Style="{StaticResource IconButton}"
+                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Padding="12,10" Click="RenameButton_Click" />
+        </Border>
+
+        <!-- Actieknoppen (§1: altijd eerst Testen (dry-run), nooit stilzwijgend overschrijven) — in
+             hun eigen kaart, zelfde stijl als de andere blokken. -->
+        <Border Grid.Row="3" Style="{StaticResource CardBorder}" Margin="0,0,0,12">
+            <StackPanel Orientation="Horizontal">
+                <Button x:Name="TestDryRunButton" Content="{local:Loc Buttons.TestDryRun}" Tag="Icons/icon-inspect.png" Style="{StaticResource IconButton}" Margin="0,0,8,0" Click="TestDryRunButton_Click" />
+                <Button x:Name="SaveAsPresetButton" Content="{local:Loc Buttons.SaveAsPreset}" Tag="Icons/icon-save.png" Style="{StaticResource IconButton}" Margin="0,0,16,0" Click="SaveAsPresetButton_Click" />
+                <TextBlock Text="{local:Loc Fields.ConflictPolicy}" VerticalAlignment="Center" Margin="0,0,6,0" />
+                <ComboBox x:Name="ConflictPolicyComboBox" Width="220" VerticalAlignment="Center" />
             </StackPanel>
         </Border>
 
         <!-- Bewaarde presets (§1/§4). -->
-        <Border Grid.Row="3" Style="{StaticResource CardBorder}" Margin="0,0,0,12">
+        <Border Grid.Row="4" Style="{StaticResource CardBorder}" Margin="0,0,0,12">
             <DockPanel>
                 <TextBlock DockPanel.Dock="Top" Text="{local:Loc Presets.Title}" FontWeight="SemiBold" Margin="0,0,0,8" />
                 <TextBlock x:Name="PresetsEmptyTextBlock" DockPanel.Dock="Top" Text="{local:Loc Presets.Empty}" Opacity="0.7" />
-                <ListBox x:Name="PresetsListBox" BorderThickness="0" Background="Transparent" MaxHeight="96">
+                <ListBox x:Name="PresetsListBox" BorderThickness="0" Background="Transparent" MaxHeight="96"
+                         MouseDoubleClick="PresetsListBox_MouseDoubleClick">
                     <ListBox.ItemContainerStyle>
                         <!-- The default ListBoxItem chrome (WPF's classic theme) carries its own
                              Padding/MinHeight, taller than this row's actual content — leaving a
@@ -91,15 +95,15 @@
                     </ListBox.ItemContainerStyle>
                     <ListBox.ItemTemplate>
                         <DataTemplate>
+                            <!-- Dubbelklikken op de rij laadt de preset (zie
+                                 PresetsListBox_MouseDoubleClick) — geen aparte "Laden"-knop meer. -->
                             <Grid Margin="0,1">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <Button Grid.Column="0" Content="{local:Loc Buttons.Load}" Tag="Icons/icon-import.png" Style="{StaticResource IconButton}" Padding="6,2" Click="PresetLoadButton_Click" />
-                                <Button Grid.Column="1" Content="{local:Loc Buttons.Delete}" Tag="Icons/icon-delete.png" Style="{StaticResource IconButton}" Padding="6,2" Margin="6,0,0,0" Click="PresetDeleteButton_Click" />
-                                <TextBlock Grid.Column="2" Text="{Binding DisplayText}" VerticalAlignment="Center" Margin="8,0,0,0" TextTrimming="CharacterEllipsis" />
+                                <TextBlock Grid.Column="0" Text="{Binding DisplayText}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                                <Button Grid.Column="1" Content="{local:Loc Buttons.Delete}" Tag="Icons/icon-delete.png" Style="{StaticResource IconButton}" Padding="6,2" Margin="8,0,0,0" Click="PresetDeleteButton_Click" />
                             </Grid>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
@@ -108,7 +112,7 @@
         </Border>
 
         <!-- Resultaat-tabel na Testen/Hernoemen (§1). -->
-        <Border Grid.Row="4" Style="{StaticResource CardBorder}">
+        <Border Grid.Row="5" Style="{StaticResource CardBorder}">
             <DockPanel>
                 <TextBlock DockPanel.Dock="Top" Text="{local:Loc Results.Title}" FontWeight="SemiBold" Margin="0,0,0,8" />
                 <DataGrid x:Name="ResultsDataGrid" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column">

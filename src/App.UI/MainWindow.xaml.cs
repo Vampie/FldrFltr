@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using App.Core.Execution;
 using App.Core.Model;
 using App.Infrastructure.Configuration;
@@ -143,10 +144,19 @@ namespace FldrFltr
             _presetStore.SaveAll(_presets.ToList());
         }
 
-        private void PresetLoadButton_Click(object sender, RoutedEventArgs e)
+        private void PresetsListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            var preset = (Preset)((Button)sender).DataContext;
+            // Double-clicking the Delete button itself would also bubble up as a ListBox
+            // double-click — but by then the preset is already removed from _presets, so
+            // SelectedItem is null and there's nothing to load.
+            if (PresetsListBox.SelectedItem is Preset preset)
+            {
+                LoadPreset(preset);
+            }
+        }
 
+        private void LoadPreset(Preset preset)
+        {
             FolderTextBox.Text = preset.Folder;
             ExtensionsTextBox.Text = preset.ExtensionFilter;
             TemplateTextBox.Text = preset.Template;
