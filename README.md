@@ -245,3 +245,7 @@ Bijgehouden per fase van [CLAUDE.md §5](../CLAUDE.md). Vink af zodra een fase w
       hernoeming. Dit wijkt bewust af van CLAUDE.md §1's oorspronkelijke "Hernoemen ≠ verplaatsen" —
       expliciet zo gevraagd. Geverifieerd via een consoletest tegen `App.Core` rechtstreeks: beide
       voorbeelden uit de vraag verplaatsen en herschikken bestanden precies zoals bedoeld.
+- [x] **"Hernoemen"-knop op een eigen rij, volle canvasbreedte**: staat niet langer naast
+      "Testen (dry-run)"/"Opslaan als preset..." in de actieknoppenrij, maar op een eigen rij
+      eronder, even breed als de 3 kaders (velden/presets/resultaat) — een nieuwe `Grid`-rij met
+      `HorizontalAlignment="Stretch"` en gecentreerde content. Geverifieerd met een screenshot.

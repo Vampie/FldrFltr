@@ -13,9 +13,9 @@
             <RowDefinition Height="Auto" /> <!-- taal/thema -->
             <RowDefinition Height="Auto" /> <!-- drie velden -->
             <RowDefinition Height="Auto" /> <!-- actieknoppen -->
+            <RowDefinition Height="Auto" /> <!-- hernoemen: eigen rij, volle breedte -->
             <RowDefinition Height="Auto" /> <!-- presets: sized to content, capped via the ListBox's MaxHeight -->
             <RowDefinition Height="*" />    <!-- resultaat: takes all remaining space -->
-
         </Grid.RowDefinitions>
 
         <!-- Taal + thema: vanaf dag 1 zichtbaar en werkend (§1 van de projectbrief). -->
@@ -61,14 +61,17 @@
         <!-- Actieknoppen (§1: altijd eerst Testen (dry-run), nooit stilzwijgend overschrijven). -->
         <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,0,12">
             <Button x:Name="TestDryRunButton" Content="{local:Loc Buttons.TestDryRun}" Tag="Icons/icon-inspect.png" Style="{StaticResource IconButton}" Margin="0,0,8,0" Click="TestDryRunButton_Click" />
-            <Button x:Name="RenameButton" Content="{local:Loc Buttons.Rename}" Tag="Icons/icon-run.png" Style="{StaticResource IconButton}" Margin="0,0,8,0" Click="RenameButton_Click" />
             <Button x:Name="SaveAsPresetButton" Content="{local:Loc Buttons.SaveAsPreset}" Tag="Icons/icon-save.png" Style="{StaticResource IconButton}" Margin="0,0,16,0" Click="SaveAsPresetButton_Click" />
             <TextBlock Text="{local:Loc Fields.ConflictPolicy}" VerticalAlignment="Center" Margin="0,0,6,0" />
             <ComboBox x:Name="ConflictPolicyComboBox" Width="220" VerticalAlignment="Center" />
         </StackPanel>
 
+        <!-- Hernoemen: eigen rij, volle canvasbreedte (zelfde breedte als de 3 kaders eronder). -->
+        <Button x:Name="RenameButton" Grid.Row="3" Content="{local:Loc Buttons.Rename}" Tag="Icons/icon-run.png" Style="{StaticResource IconButton}"
+                HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Padding="12,10" Margin="0,0,0,12" Click="RenameButton_Click" />
+
         <!-- Bewaarde presets (§1/§4). -->
-        <Border Grid.Row="3" Style="{StaticResource CardBorder}" Margin="0,0,0,12">
+        <Border Grid.Row="4" Style="{StaticResource CardBorder}" Margin="0,0,0,12">
             <DockPanel>
                 <TextBlock DockPanel.Dock="Top" Text="{local:Loc Presets.Title}" FontWeight="SemiBold" Margin="0,0,0,8" />
                 <TextBlock x:Name="PresetsEmptyTextBlock" DockPanel.Dock="Top" Text="{local:Loc Presets.Empty}" Opacity="0.7" />
@@ -103,7 +106,7 @@
         </Border>
 
         <!-- Resultaat-tabel na Testen/Hernoemen (§1). -->
-        <Border Grid.Row="4" Style="{StaticResource CardBorder}">
+        <Border Grid.Row="5" Style="{StaticResource CardBorder}">
             <DockPanel>
                 <TextBlock DockPanel.Dock="Top" Text="{local:Loc Results.Title}" FontWeight="SemiBold" Margin="0,0,0,8" />
                 <DataGrid x:Name="ResultsDataGrid" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column">
