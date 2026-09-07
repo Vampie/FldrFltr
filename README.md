@@ -249,3 +249,10 @@ Bijgehouden per fase van [CLAUDE.md §5](../CLAUDE.md). Vink af zodra een fase w
       "Testen (dry-run)"/"Opslaan als preset..." in de actieknoppenrij, maar op een eigen rij
       eronder, even breed als de 3 kaders (velden/presets/resultaat) — een nieuwe `Grid`-rij met
       `HorizontalAlignment="Stretch"` en gecentreerde content. Geverifieerd met een screenshot.
+- [x] **Actieknoppen in hun eigen kaart**: "Testen (dry-run)"/"Opslaan als preset..."/"Bij
+      naamconflict" + de volle-breedte "Hernoemen"-knop staan nu samen in een vierde `CardBorder`
+      (zelfde stijl als de velden/presets/resultaat-kaarten), i.p.v. los tussen de andere kaarten
+      te zweven. Kon deze keer niet met een screenshot geverifieerd worden (gebruiker was actief
+      in een andere applicatie — vensterfocus overnemen was niet gepast op dat moment); het is een
+      kleine, op zichzelf staande XAML-herstructurering (rijen samengevoegd in één `Border`), graag
+      zelf even bevestigen.
