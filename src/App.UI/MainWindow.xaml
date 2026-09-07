@@ -72,17 +72,28 @@
             <DockPanel>
                 <TextBlock DockPanel.Dock="Top" Text="{local:Loc Presets.Title}" FontWeight="SemiBold" Margin="0,0,0,8" />
                 <TextBlock x:Name="PresetsEmptyTextBlock" DockPanel.Dock="Top" Text="{local:Loc Presets.Empty}" Opacity="0.7" />
-                <ListBox x:Name="PresetsListBox" BorderThickness="0" Background="Transparent" MaxHeight="160">
+                <ListBox x:Name="PresetsListBox" BorderThickness="0" Background="Transparent" MaxHeight="96">
+                    <ListBox.ItemContainerStyle>
+                        <!-- The default ListBoxItem chrome (WPF's classic theme) carries its own
+                             Padding/MinHeight, taller than this row's actual content — leaving a
+                             blank-looking strip above/below the text. Zeroed out here since we
+                             already draw our own compact row. -->
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="Padding" Value="0" />
+                            <Setter Property="MinHeight" Value="0" />
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        </Style>
+                    </ListBox.ItemContainerStyle>
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <Grid Margin="0,2">
+                            <Grid Margin="0,1">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <Button Grid.Column="0" Content="{local:Loc Buttons.Load}" Tag="Icons/icon-import.png" Style="{StaticResource IconButton}" Padding="8,3" Click="PresetLoadButton_Click" />
-                                <Button Grid.Column="1" Content="{local:Loc Buttons.Delete}" Tag="Icons/icon-delete.png" Style="{StaticResource IconButton}" Padding="8,3" Margin="6,0,0,0" Click="PresetDeleteButton_Click" />
+                                <Button Grid.Column="0" Content="{local:Loc Buttons.Load}" Tag="Icons/icon-import.png" Style="{StaticResource IconButton}" Padding="6,2" Click="PresetLoadButton_Click" />
+                                <Button Grid.Column="1" Content="{local:Loc Buttons.Delete}" Tag="Icons/icon-delete.png" Style="{StaticResource IconButton}" Padding="6,2" Margin="6,0,0,0" Click="PresetDeleteButton_Click" />
                                 <TextBlock Grid.Column="2" Text="{Binding DisplayText}" VerticalAlignment="Center" Margin="8,0,0,0" TextTrimming="CharacterEllipsis" />
                             </Grid>
                         </DataTemplate>

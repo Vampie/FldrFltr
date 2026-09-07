@@ -192,3 +192,27 @@ Bijgehouden per fase van [CLAUDE.md §5](../CLAUDE.md). Vink af zodra een fase w
         (`Height="*"`) krijgt daardoor de vrijgekomen ruimte.
       - Kon ook deze ronde niet met screenshots geverifieerd worden (gebruiker was actief in Visual
         Studio aan een ander project) — graag zelf even bevestigen.
+- [x] **Opvolging op screenshot-feedback: presets-lijst nog compacter, dropdowns écht getest,
+      versienummer in de titelbalk**:
+      - Presets-lijst verder verkleind: `MaxHeight` van de `ListBox` naar 96 (was 160), een expliciete
+        `ListBoxItem`-stijl (`Padding="0"`, `MinHeight="0"`) om WPF's ingebouwde item-chrome (die
+        ruimte innam zonder zichtbare inhoud — de lege streep tussen twee presets op de screenshot)
+        weg te nemen, en de knoppen kregen krappere `Padding` (6,2 i.p.v. 8,3). Geverifieerd met
+        screenshots: 2 presets tonen nu zonder enige lege ruimte ertussen.
+      - ComboBox-pijltje zat nog verkeerd (voor de tekst i.p.v. aan de rechterkant): het pijltje zat
+        genest in de `ToggleButton`'s eigen sub-template, gepositioneerd t.o.v. DIE Border — eruit
+        gehaald en rechtstreeks in de buitenste Grid geplaatst met `HorizontalAlignment="Right"`,
+        los van de `ToggleButton`. Geverifieerd met screenshots: pijltje staat nu correct helemaal
+        rechts.
+      - `MinHeight="32"` stond al goed; opnieuw geverifieerd dat de dropdowns een normale hoogte
+        hebben.
+      - Titelbalk toont nu het versienummer (`FldrFltr v{versie}`), zelfde aanpak als FldrSrtr
+        (`AssemblyInformationalVersionAttribute`, gestempeld door `release.ps1`'s `-p:Version`, met
+        terugval op de kale assembly-versie voor lokale dev-builds — vandaar "v1.0.0" in
+        screenshots die niet via het releasescript gebouwd zijn).
+      - Tijdens het verifiëren viel een klein blauw stipje op vlak vóór de tekst in elke dropdown.
+        Bevestigd met `GetCursorPos` dat de echte muisaanwijzer zich elders bevond op het moment van
+        de screenshot — dus geen onderdeel van de UI zelf, vermoedelijk een houdbaarheids-artefact
+        van de cursor in deze RDP-sessie (van het automatiseren zelf), niet van de app. Kon niet
+        verder herleid worden binnen een redelijke tijdsbesteding; als dit stipje ook op je eigen
+        scherm zichtbaar is (dus geen sessie-artefact), laat het weten.

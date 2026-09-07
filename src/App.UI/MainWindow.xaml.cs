@@ -22,6 +22,8 @@ namespace FldrFltr
         {
             InitializeComponent();
 
+            Title = $"{Title} v{GetAppVersion()}";
+
             _settings = _settingsService.LoadOrCreateDefault();
 
             LanguageComboBox.ItemsSource = Localization.GetAvailableLanguages();
@@ -190,6 +192,21 @@ namespace FldrFltr
             _settings.Theme = theme;
             _settingsService.Save(_settings);
             ThemeProvider.ApplySetting(theme);
+        }
+
+        /// <summary>Reads the informational version (e.g. "1.0.12") that release.ps1 stamps onto
+        /// the assembly via -p:Version. Falls back to the plain assembly version for local/dev
+        /// builds that were never packaged through the release script. (Same approach as
+        /// FldrSrtr's MainWindow.GetAppVersion.)</summary>
+        private static string GetAppVersion()
+        {
+            var assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            string informational = assembly
+                .GetCustomAttributes(typeof(System.Reflection.AssemblyInformationalVersionAttribute), false)
+                .OfType<System.Reflection.AssemblyInformationalVersionAttribute>()
+                .FirstOrDefault()?.InformationalVersion;
+
+            return !string.IsNullOrWhiteSpace(informational) ? informational : assembly.GetName().Version.ToString();
         }
 
         /// <summary>ComboBox item wrapper: ConflictPolicy has no display text of its own (Core

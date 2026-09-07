@@ -70,6 +70,9 @@
                 <Setter Property="BorderBrush" Value="{DynamicResource SystemControlForegroundAccentBrush}" />
                 <Setter Property="BorderThickness" Value="1" />
                 <Setter Property="Padding" Value="8,5" />
+                <!-- Rules out a stray default focus-visual adornment as the source of a small
+                     accent-colored artifact seen just before the selected item's text. -->
+                <Setter Property="FocusVisualStyle" Value="{x:Null}" />
                 <!-- The ToggleButton that carries the visible chrome has no content of its own
                      (just the small arrow glyph), so without an explicit MinHeight the whole
                      ComboBox can shrink back down to that arrow's height instead of a normal
@@ -83,24 +86,19 @@
                                               Background="{TemplateBinding Background}"
                                               BorderBrush="{TemplateBinding BorderBrush}"
                                               BorderThickness="{TemplateBinding BorderThickness}"
-                                              Foreground="{TemplateBinding Foreground}"
                                               IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
                                     <ToggleButton.Template>
+                                        <!-- Just the box — no arrow in here. Putting the arrow in
+                                             this nested template (previous version) anchored it
+                                             to THIS Border's own coordinate space via a 2-column
+                                             Grid, which visually landed wrong; anchoring it
+                                             directly in the outer Grid below (HorizontalAlignment
+                                             ="Right") removes that indirection entirely. -->
                                         <ControlTemplate TargetType="ToggleButton">
                                             <Border Background="{TemplateBinding Background}"
                                                     BorderBrush="{TemplateBinding BorderBrush}"
                                                     BorderThickness="{TemplateBinding BorderThickness}"
-                                                    CornerRadius="4">
-                                                <Grid>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="*" />
-                                                        <ColumnDefinition Width="24" />
-                                                    </Grid.ColumnDefinitions>
-                                                    <Path Grid.Column="1" Data="M 0 0 L 4 4 L 8 0 Z"
-                                                          Fill="{TemplateBinding Foreground}"
-                                                          HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                                </Grid>
-                                            </Border>
+                                                    CornerRadius="4" />
                                         </ControlTemplate>
                                     </ToggleButton.Template>
                                 </ToggleButton>
@@ -109,6 +107,9 @@
                                                   ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
                                                   Margin="{TemplateBinding Padding}"
                                                   HorizontalAlignment="Left" VerticalAlignment="Center" />
+                                <Path IsHitTestVisible="False" Data="M 0 0 L 4 4 L 8 0 Z"
+                                      Fill="{TemplateBinding Foreground}"
+                                      HorizontalAlignment="Right" Margin="0,0,10,0" VerticalAlignment="Center" />
                                 <Popup x:Name="Popup" IsOpen="{TemplateBinding IsDropDownOpen}"
                                        Placement="Bottom" AllowsTransparency="True" Focusable="False" PopupAnimation="Slide">
                                     <Border Background="{TemplateBinding Background}"
