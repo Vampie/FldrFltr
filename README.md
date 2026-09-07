@@ -31,7 +31,8 @@ scratch folder), the release script also copies the built files there automatica
 ## Features
 
 **Header** — large "FldrFltr" in the current theme's accent color, with a "Filter your folders"
-tagline next to it in the normal text color (always English, not translated)
+tagline next to it in the normal text color (always English, not translated). The window itself
+always fits its actual content height (`SizeToContent`), so it's never taller than what's shown
 
 **The three input fields**
 - **Folder** — the folder to search, with a "Browse..." button (Ookii `VistaFolderBrowserDialog`)
@@ -57,9 +58,9 @@ tagline next to it in the normal text color (always English, not translated)
   thread, doesn't block the UI) and "Done — N file(s) ..." afterwards — no full progress bar,
   just a simple indicator
 - The result table itself starts collapsed and takes no space while collapsed — the window
-  shrinks/grows with it (toggle with the "▸"/"▾" next to its title) — the status text above stays
-  visible either way, so a Rename without a prior Test still shows its outcome; running a Test
-  (dry run) auto-expands the table
+  auto-fits and shrinks/grows with it (toggle with the "▸"/"▾" next to its title) — the status
+  text above stays visible either way, so a Rename without a prior Test still shows its outcome;
+  running a Test (dry run) auto-expands the table
 
 **Saved presets**
 - A preset saves Folder + Extension list + Name template under a name; the list shows
@@ -84,8 +85,9 @@ tagline next to it in the normal text color (always English, not translated)
   blank dropdown, and `settings.json` heals itself back to the valid value
 
 **Window size & position**
-- Remembers position, size and which screen at close; on the next start the window opens back in
-  exactly the same place
+- Remembers position, width and which screen at close; on the next start the window opens back
+  in exactly the same place — height always auto-fits the actual content instead of being
+  remembered (see the collapsible results table above)
 - If that screen is no longer connected (or the saved position is invalid), it falls back to a
-  default size — 35% of the screen's width, 80% of its height, centered — and is always clamped
-  within a connected screen, so the app never opens mostly or fully off-screen
+  default width — 35% of the screen's width, centered — and is always clamped within a connected
+  screen, so the app never opens mostly or fully off-screen

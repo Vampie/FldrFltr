@@ -7,7 +7,12 @@
         Background="{DynamicResource PageBackgroundBrush}"
         Foreground="{DynamicResource PageForegroundBrush}"
         Title="{local:Loc MainWindow.Title}"
-        Height="680" Width="800" MinHeight="540" MinWidth="640">
+        Height="680" Width="800" MinHeight="400" MinWidth="640"
+        SizeToContent="Height">
+    <!-- SizeToContent="Height": the window always fits its own content vertically — a collapsed
+         results table (Grid.Row 5 below, Height="Auto") never leaves dead space, and an expanded
+         one grows the window automatically, no manual resize math needed. Width stays manual
+         (ApplyWindowPlacement/saved settings/screen percentage), only height is content-driven. -->
     <Grid Margin="16">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -35,7 +40,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Bottom">
-                <TextBlock Text="{local:Loc MainWindow.HeaderTitle}" FontSize="48" FontWeight="Bold"
+                <TextBlock Text="{local:Loc MainWindow.HeaderTitle}" FontSize="64" FontWeight="Bold"
                            Foreground="{DynamicResource SystemControlForegroundAccentBrush}" VerticalAlignment="Bottom" />
                 <!-- Always English, no translation (explicit request) — erft verder de gewone
                      theme-tekstkleur van het Window (geen eigen Foreground). -->
@@ -176,7 +181,10 @@
 
         <!-- Collapsible variable-help panel (v2) — same content as VariableHelpWindow's popup,
              toggled via ToggleHelpPanelButton (see MainWindow.xaml.cs). Hidden by default. -->
-        <Border x:Name="HelpPanelBorder" Grid.Column="1" Style="{StaticResource CardBorder}" Margin="12,0,0,0" Visibility="Collapsed">
+        <!-- MaxHeight matters now that Window is SizeToContent="Height" — without a cap, this
+             long variable list would grow the whole window instead of scrolling internally. -->
+        <Border x:Name="HelpPanelBorder" Grid.Column="1" Style="{StaticResource CardBorder}" Margin="12,0,0,0"
+                MaxHeight="640" Visibility="Collapsed">
             <DockPanel>
                 <TextBlock DockPanel.Dock="Top" Text="{local:Loc VarHelp.PanelTitle}" FontWeight="SemiBold" Margin="0,0,0,8" />
                 <ScrollViewer VerticalScrollBarVisibility="Auto">

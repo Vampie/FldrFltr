@@ -6,15 +6,18 @@ logical spot once a version is done.
 
 ## v2 (in progress)
 
-- **Header title**: large "FldrFltr" in the theme's accent color, with a "Filter your folders"
-  tagline next to it in the normal text color — always English, not translated.
+- **Header title**: large (64px) "FldrFltr" in the theme's accent color, with a "Filter your
+  folders" tagline next to it in the normal text color — always English, not translated.
 - **Collapsible results table**: the result table (after Test/Rename) starts collapsed and truly
-  takes no space while collapsed — the window itself shrinks/grows by a fixed amount as the table
-  toggles, instead of just leaving a tall empty card. The status text next to its title stays
-  visible either way, so a Rename run without a prior Test still shows its outcome. A dry run
-  (Test, or a preset's automatic one) auto-expands the table. A checkbox next to "Saved presets"
-  ("Show result when loading") controls only whether *loading* a preset auto-expands the table
-  this way — the preset's dry run itself always still runs.
+  takes no space while collapsed. The window is now `SizeToContent="Height"` — it always fits its
+  actual content vertically (no more fixed 80%-of-screen default height, which used to leave a
+  large empty area below a collapsed table), growing/shrinking automatically as the table toggles
+  instead of leaving a tall empty card. The status text next to its title stays visible either
+  way, so a Rename run without a prior Test still shows its outcome. A dry run (Test, or a
+  preset's automatic one) auto-expands the table. A checkbox next to "Saved presets" ("Show
+  result when loading") controls only whether *loading* a preset auto-expands the table this way
+  — the preset's dry run itself always still runs. (The variable-help side panel's list is capped
+  at a max height so it scrolls internally instead of forcing the whole window to grow with it.)
 - **`release/ToCopy`**: every `release.ps1` run now clears and refills this folder with only the
   files that actually changed compared to the previous release (byte-compared, not by timestamp)
   — so updating a customer's remote PC only needs those files, not the whole install.

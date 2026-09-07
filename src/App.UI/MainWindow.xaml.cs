@@ -116,15 +116,6 @@ namespace FldrFltr
             // now-invalid, top-left-anchored rectangle next time.
             Rect bounds = WindowState == WindowState.Normal ? new Rect(Left, Top, Width, Height) : RestoreBounds;
 
-            // Results table always starts collapsed on the next launch (no persisted expand
-            // state) — normalize the saved height to that same collapsed baseline here, so a
-            // session closed while expanded doesn't restore into a too-tall window with dead
-            // space below the (collapsed) results row.
-            if (ResultsDataGrid.Visibility == Visibility.Visible)
-            {
-                bounds.Height = Math.Max(bounds.Height - (ResultsExpandedHeight + ResultsExpandedGap), MinHeight);
-            }
-
             _settings.WindowLeft = bounds.Left;
             _settings.WindowTop = bounds.Top;
             _settings.WindowWidth = bounds.Width;
@@ -132,11 +123,15 @@ namespace FldrFltr
             _settingsService.Save(_settings);
         }
 
-        private static Rect DefaultPlacement()
+        private Rect DefaultPlacement()
         {
             System.Drawing.Rectangle screen = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea;
             double width = screen.Width * 0.35;
-            double height = screen.Height * 0.80;
+            // Height is nominal here — Window.SizeToContent="Height" (MainWindow.xaml) always
+            // fits the window to its actual content right after this, so it never keeps a fixed
+            // fraction of the screen and never leaves dead space below a collapsed results table.
+            // This value only feeds the initial FitsOnAnyScreen/ClampToBestScreen math below.
+            double height = MinHeight;
             double left = screen.Left + (screen.Width - width) / 2;
             double top = screen.Top + (screen.Height - height) / 2;
             return new Rect(left, top, width, height);
@@ -327,39 +322,14 @@ namespace FldrFltr
         private void ToggleResultsButton_Click(object sender, RoutedEventArgs e) =>
             SetResultsExpanded(ResultsDataGrid.Visibility != Visibility.Visible);
 
-        private const double ResultsExpandedHeight = 240;
-        private const double ResultsExpandedGap = 8;
-
-        /// <summary>Row 5 is Height="Auto" (not "*"), so a collapsed table truly takes no space
-        /// instead of just leaving the CardBorder tall and empty — the window's own Height is
-        /// grown/shrunk here by the same fixed delta the DataGrid's own Height reserves when
-        /// visible, mirroring ToggleHelpPanelButton_Click's width trick. Guarded against re-adding
-        /// the delta on a no-op call (e.g. RunPlanAsync calling this after every dry run while
-        /// already expanded).</summary>
+        /// <summary>Row 5 is Height="Auto" (not "*") and the Window itself is
+        /// SizeToContent="Height" (MainWindow.xaml), so toggling the DataGrid's Visibility is all
+        /// that's needed — WPF re-fits the window's height to whatever the content actually needs
+        /// on every layout pass, collapsed or expanded, with no manual grow/shrink math.</summary>
         private void SetResultsExpanded(bool expanded)
         {
-            bool alreadyExpanded = ResultsDataGrid.Visibility == Visibility.Visible;
-            if (alreadyExpanded == expanded)
-            {
-                return;
-            }
-
             ResultsDataGrid.Visibility = expanded ? Visibility.Visible : Visibility.Collapsed;
             ToggleResultsButton.Content = expanded ? "▾" : "▸";
-
-            double delta = ResultsExpandedHeight + ResultsExpandedGap;
-            if (expanded)
-            {
-                Rect grown = ClampToBestScreen(new Rect(Left, Top, Width, Height + delta));
-                Left = grown.Left;
-                Top = grown.Top;
-                Width = grown.Width;
-                Height = grown.Height;
-            }
-            else
-            {
-                Height = Math.Max(Height - delta, MinHeight);
-            }
         }
 
         private RenameOptions BuildOptionsFromFields() => new RenameOptions
