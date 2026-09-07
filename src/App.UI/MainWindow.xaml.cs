@@ -116,6 +116,15 @@ namespace FldrFltr
             // now-invalid, top-left-anchored rectangle next time.
             Rect bounds = WindowState == WindowState.Normal ? new Rect(Left, Top, Width, Height) : RestoreBounds;
 
+            // Results table always starts collapsed on the next launch (no persisted expand
+            // state) — normalize the saved height to that same collapsed baseline here, so a
+            // session closed while expanded doesn't restore into a too-tall window with dead
+            // space below the (collapsed) results row.
+            if (ResultsDataGrid.Visibility == Visibility.Visible)
+            {
+                bounds.Height = Math.Max(bounds.Height - (ResultsExpandedHeight + ResultsExpandedGap), MinHeight);
+            }
+
             _settings.WindowLeft = bounds.Left;
             _settings.WindowTop = bounds.Top;
             _settings.WindowWidth = bounds.Width;
@@ -318,10 +327,39 @@ namespace FldrFltr
         private void ToggleResultsButton_Click(object sender, RoutedEventArgs e) =>
             SetResultsExpanded(ResultsDataGrid.Visibility != Visibility.Visible);
 
+        private const double ResultsExpandedHeight = 240;
+        private const double ResultsExpandedGap = 8;
+
+        /// <summary>Row 5 is Height="Auto" (not "*"), so a collapsed table truly takes no space
+        /// instead of just leaving the CardBorder tall and empty — the window's own Height is
+        /// grown/shrunk here by the same fixed delta the DataGrid's own Height reserves when
+        /// visible, mirroring ToggleHelpPanelButton_Click's width trick. Guarded against re-adding
+        /// the delta on a no-op call (e.g. RunPlanAsync calling this after every dry run while
+        /// already expanded).</summary>
         private void SetResultsExpanded(bool expanded)
         {
+            bool alreadyExpanded = ResultsDataGrid.Visibility == Visibility.Visible;
+            if (alreadyExpanded == expanded)
+            {
+                return;
+            }
+
             ResultsDataGrid.Visibility = expanded ? Visibility.Visible : Visibility.Collapsed;
             ToggleResultsButton.Content = expanded ? "▾" : "▸";
+
+            double delta = ResultsExpandedHeight + ResultsExpandedGap;
+            if (expanded)
+            {
+                Rect grown = ClampToBestScreen(new Rect(Left, Top, Width, Height + delta));
+                Left = grown.Left;
+                Top = grown.Top;
+                Width = grown.Width;
+                Height = grown.Height;
+            }
+            else
+            {
+                Height = Math.Max(Height - delta, MinHeight);
+            }
         }
 
         private RenameOptions BuildOptionsFromFields() => new RenameOptions

@@ -1,7 +1,6 @@
 {
   "MainWindow.Title": "FldrFltr",
   "MainWindow.HeaderTitle": "FldrFltr",
-  "MainWindow.HeaderSubtitle": "Filter je mappen",
 
   "Fields.Folder": "Map:",
   "Fields.FolderBrowse": "Bladeren...",

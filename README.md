@@ -30,8 +30,8 @@ scratch folder), the release script also copies the built files there automatica
 
 ## Features
 
-**Header** — "FldrFltr" in the current theme's accent color, with a "Filter your folders"
-tagline next to it in the normal text color
+**Header** — large "FldrFltr" in the current theme's accent color, with a "Filter your folders"
+tagline next to it in the normal text color (always English, not translated)
 
 **The three input fields**
 - **Folder** — the folder to search, with a "Browse..." button (Ookii `VistaFolderBrowserDialog`)
@@ -56,9 +56,10 @@ tagline next to it in the normal text color
 - A status text next to "Result" shows "Testing/renaming..." while it runs (on a background
   thread, doesn't block the UI) and "Done — N file(s) ..." afterwards — no full progress bar,
   just a simple indicator
-- The result table itself starts collapsed (toggle with the "▸"/"▾" next to its title) — the
-  status text above stays visible either way, so a Rename without a prior Test still shows its
-  outcome; running a Test (dry run) auto-expands the table
+- The result table itself starts collapsed and takes no space while collapsed — the window
+  shrinks/grows with it (toggle with the "▸"/"▾" next to its title) — the status text above stays
+  visible either way, so a Rename without a prior Test still shows its outcome; running a Test
+  (dry run) auto-expands the table
 
 **Saved presets**
 - A preset saves Folder + Extension list + Name template under a name; the list shows

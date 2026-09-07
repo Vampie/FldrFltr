@@ -23,7 +23,9 @@
             <RowDefinition Height="Auto" /> <!-- hernoemen: eigen kaart -->
             <RowDefinition Height="Auto" /> <!-- actiekaart: testen/opslaan/naamconflict -->
             <RowDefinition Height="Auto" /> <!-- presets: sized to content, capped via the ListBox's MaxHeight -->
-            <RowDefinition Height="*" />    <!-- resultaat: takes all remaining space -->
+            <!-- resultaat: Auto (not *) so an ingeklapte tabel geen ruimte inneemt — het venster
+                 zelf krimpt/groeit mee via SetResultsExpanded in MainWindow.xaml.cs. -->
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <!-- Titel (v2) + taal/thema: vanaf dag 1 zichtbaar en werkend (§1 van de projectbrief). -->
@@ -33,10 +35,11 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Bottom">
-                <TextBlock Text="{local:Loc MainWindow.HeaderTitle}" FontSize="32" FontWeight="Bold"
+                <TextBlock Text="{local:Loc MainWindow.HeaderTitle}" FontSize="48" FontWeight="Bold"
                            Foreground="{DynamicResource SystemControlForegroundAccentBrush}" VerticalAlignment="Bottom" />
-                <!-- Erft de gewone theme-tekstkleur van het Window (geen eigen Foreground). -->
-                <TextBlock Text="{local:Loc MainWindow.HeaderSubtitle}" FontSize="16" Margin="10,0,0,4" VerticalAlignment="Bottom" />
+                <!-- Always English, no translation (explicit request) — erft verder de gewone
+                     theme-tekstkleur van het Window (geen eigen Foreground). -->
+                <TextBlock Text="Filter your folders" FontSize="16" Margin="10,0,0,6" VerticalAlignment="Bottom" />
             </StackPanel>
             <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Bottom">
                 <TextBlock Text="{local:Loc Settings.Language}" VerticalAlignment="Center" Margin="0,0,6,0" />
@@ -160,7 +163,7 @@
                         <TextBlock Text="{local:Loc Results.Title}" FontWeight="SemiBold" VerticalAlignment="Center" />
                     </StackPanel>
                 </DockPanel>
-                <DataGrid x:Name="ResultsDataGrid" Visibility="Collapsed" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column">
+                <DataGrid x:Name="ResultsDataGrid" Visibility="Collapsed" Height="240" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="{local:Loc Results.ColumnFrom}" Binding="{Binding From}" Width="*" />
                         <DataGridTextColumn Header="{local:Loc Results.ColumnTo}" Binding="{Binding To}" Width="*" />

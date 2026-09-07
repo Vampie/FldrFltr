@@ -1,7 +1,6 @@
 {
   "MainWindow.Title": "FldrFltr",
   "MainWindow.HeaderTitle": "FldrFltr",
-  "MainWindow.HeaderSubtitle": "Filter your folders",
 
   "Fields.Folder": "Folder:",
   "Fields.FolderBrowse": "Browse...",
