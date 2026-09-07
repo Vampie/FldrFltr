@@ -2,12 +2,7 @@
 
 Portable Windows tool to select files in a folder by extension and bulk-rename (or
 move/reorganize) them via a name template with variables (`{FileName}`, `{Year}`, `{Counter}`,
-...). See [`CLAUDE.md`](../CLAUDE.md) (in the parent folder) for the full project brief:
-functional requirements, the complete variable list, the technology trade-off and the
-architecture proposal.
-
-Sister project of [FldrSrtr](https://github.com/) — same stack, same portable philosophy (no
-installer, no registry, everything next to the exe).
+...).
 
 ## Stack
 
